@@ -39,11 +39,11 @@ Original:
 
 Preprocessed
 
-![preview](http://relativity.fi/textextractor/preprocessed.tif)
+![preview](http://relativity.fi/textextractor/preprocessed.jpg)
 
 Extracted text:
 
-´´´´
+````
 with smooth transitions and animations; a QML-based user interfaces can be connectedVtc—>—a"C—~:~w
 based application b3.Cl{."€l1d that implements more complex application functionality or accesses
 si‘:lnii*d~party ‘C-’r~’r libraries.
@@ -60,4 +60,4 @@ fade as they are scrolled past their limits) t l f t .p 1
 covers i  _
 The current wlease of Sailﬁsh Silica is based on Qt 5.0 and QtQuick 2. Sailﬁsh applicationsﬁshouldtp
 import version 2.0 of the QtQuick module. a ‘ p _  f
-´´´´
+````
