@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 X-Nemo-Application-Type=silica-qt5
-Icon=testi
-Exec=testi
-Name=testi
+Icon=harbour-text-extractor
+Exec=harbour-text-extractor
+Name=Text Extractor

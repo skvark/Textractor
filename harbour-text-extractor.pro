@@ -33,7 +33,8 @@ OTHER_FILES += qml/harbour-text-extractor.qml \
     rpm/harbour-text-extractor.spec \
     rpm/harbour-text-extractor.yaml \
     rpm/harbour-text-extractor.changes.in \
-    harbour-text-extractor.desktop
+    harbour-text-extractor.desktop \
+    README.md
 
 # to disable building translations every time, comment out the
 # following CONFIG line
