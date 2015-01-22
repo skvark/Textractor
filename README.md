@@ -13,6 +13,7 @@ Environment and building
 ------------------------
 
 To be able to build this, follow this Gist to setup the environment correctly: https://gist.github.com/skvark/49a2f1904192b6db311a
+
 The spec file is too WIP and throws some errors, ignore them.
 
 Preprocessing
