@@ -9,20 +9,32 @@
     </message>
 </context>
 <context>
-    <name>FirstPage</name>
+    <name>EditPage</name>
     <message>
-        <source>Show Page 2</source>
+        <source>Copy Text to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit text</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SecondPage</name>
     <message>
-        <source>Copy text to clipboard</source>
+        <source>Please wait. Processing may take several seconds.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Please wait. Processing may take several seconds.</source>
+        <source>Copy Text to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extracted text</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -5,6 +5,7 @@
 #include <QStandardPaths>
 #include <QImageWriter>
 #include <QImage>
+#include <QStringList>
 
 extern Pix* preprocess(Pix *image,
                        int usm_halfwidth,
@@ -17,15 +18,15 @@ extern Pix* preprocess(Pix *image,
 
     // convert the 32 bpp image to gray and 8 bpp (leptonica requires 8 bpp)
     image = pixConvertRGBToGrayFast(image);
-    qDebug() << "converted to gray";
+    // qDebug() << "converted to gray";
     // unsharp mask
     image = pixUnsharpMaskingGray(image, usm_halfwidth, usm_fract);
-    qDebug() << "unsharp mask";
+    // qDebug() << "unsharp mask";
     // adaptive treshold
     if(pixOtsuAdaptiveThreshold(image, sX, sY, smoothX, smoothY, scoreFract, NULL, &image) != 0) {
         return NULL;
     }
-    qDebug() << "adaptive treshold";
+    // qDebug() << "adaptive treshold";
     return image;
 }
 
@@ -68,10 +69,26 @@ extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &stat
     status = QString("Running OCR...");
     outText = api->GetUTF8Text();
 
-    qDebug() << outText;
+    status = QString("Postprocessing...");
 
     QString text = QString::fromLocal8Bit(outText);
+
+    // Lets do some cleaning based on the word confidence value
+    QStringList results = text.split(" ");
+    int *confidences = api->AllWordConfidences();
+    int i = 0;
+
+    while(i < results.size()) {
+        if(confidences[i] < 20) {
+            results.removeAt(i);
+        }
+        ++i;
+    }
+
+    text = results.join(" ");
+
+    delete [] confidences;
     delete [] outText;
     pixDestroy(&pixs);
-    return text;
+    return text.toUtf8();
 }

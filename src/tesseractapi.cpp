@@ -7,6 +7,7 @@
 TesseractAPI::TesseractAPI(QObject *parent) :
     QObject(parent)
 {
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
     api_ = new tesseract::TessBaseAPI();
     if (api_->Init(NULL, "eng")) {
         qDebug() << "Could not initialize tesseract.";
