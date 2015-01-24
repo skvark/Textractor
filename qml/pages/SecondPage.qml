@@ -63,13 +63,7 @@ Page {
             anchors.leftMargin: Theme.paddingLarge
             anchors.rightMargin: Theme.paddingLarge
             anchors.topMargin: Theme.paddingLarge
-            height: {
-                if(loading) {
-                    return 900;
-                } else {
-                    return area.height;
-                }
-            }
+            height: 900
 
             Label {
                 id: area
@@ -90,6 +84,7 @@ Page {
         target: tesseractAPI
         onAnalyzed: {
             area.text = text;
+            textholder.height = area.height + 50
             loading = false;
         }
         onStateChanged: {

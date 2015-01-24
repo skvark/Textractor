@@ -20,7 +20,6 @@ Page {
                 onClicked: {
                     Clipboard.text = area.text;
                 }
-                enabled: !loading
             }
         }
 

@@ -23,6 +23,15 @@ Page {
             }
         }
 
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Usage Hints");
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("HintsPage.qml"))
+                }
+            }
+        }
+
         Item {
             id: cameraOutput
             x: 0

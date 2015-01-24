@@ -20,6 +20,28 @@
     </message>
 </context>
 <context>
+    <name>FirstPage</name>
+    <message>
+        <source>Usage Hints</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HintsPage</name>
+    <message>
+        <source>Usage Hints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Taking a Good Picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Why the processing is very slow and results are obscure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SecondPage</name>
     <message>
         <source>Please wait. Processing may take several seconds.</source>

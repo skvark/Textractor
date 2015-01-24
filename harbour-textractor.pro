@@ -37,7 +37,8 @@ OTHER_FILES += qml/harbour-textractor.qml \
     rpm/harbour-textractor.changes.in \
     harbour-textractor.desktop \
     README.md \
-    qml/pages/EditPage.qml
+    qml/pages/EditPage.qml \
+    qml/pages/HintsPage.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
