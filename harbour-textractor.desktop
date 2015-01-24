@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 X-Nemo-Application-Type=silica-qt5
-Icon=harbour-text-extractor
-Exec=harbour-text-extractor
-Name=Text Extractor
+Icon=harbour-textractor
+Exec=harbour-textractor
+Name=Textractor
