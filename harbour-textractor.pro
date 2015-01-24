@@ -10,7 +10,7 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = harbour-text-extractor
+TARGET = harbour-textractor
 
 CONFIG += sailfishapp
 CONFIG += c++11
@@ -20,22 +20,22 @@ INCLUDEPATH += src/
 
 LIBS += -ltesseract -llept
 
-QMAKE_RPATHDIR += /usr/share/harbour-text-extractor/lib/
+QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 
 SOURCES += \
     src/tesseractapi.cpp \
     src/imageprocessor.cpp \
     src/harbour-textractor.cpp
 
-OTHER_FILES += qml/harbour-text-extractor.qml \
+OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
     qml/pages/SecondPage.qml \
     translations/*.ts \
-    rpm/harbour-text-extractor.spec \
-    rpm/harbour-text-extractor.yaml \
-    rpm/harbour-text-extractor.changes.in \
-    harbour-text-extractor.desktop \
+    rpm/harbour-textractor.spec \
+    rpm/harbour-textractor.yaml \
+    rpm/harbour-textractor.changes.in \
+    harbour-textractor.desktop \
     README.md
 
 # to disable building translations every time, comment out the
