@@ -6,7 +6,7 @@ Currently works only in landscape orientation and there's some debug code to see
 
 Some notes:
 - ensure that there's good lighting conditions when taking pictures
-- check that there's no shadows or complex textures in the background
+- check that there are no shadows or complex textures in the background
 - works best with black text and light colored backgrounds
 
 Environment and building
@@ -23,12 +23,19 @@ Tesseract OCR is just plain engine so Leptonica is used for preprocessing the im
 
 Currently following steps will be done before the image is passed to the engine for recognition:
 
-1. Image is first opened using QImage, dpi is set to 300 and the image is saved in TIFF format.
-2. Load the tiff image with Leptonica and convert the 32 bpp image to gray 8 bpp image
+1. Image is first opened using QImage, dpi is set to 300 and the image is saved in jpg format.
+2. Load the jpg image with Leptonica and convert the 32 bpp image to gray 8 bpp image
 3. Unsharp mask
 4. Adaptive treshold (Otsu's algorithm)
 
 After those steps the image is passed to the Tesseract.
+
+Postprocessing
+--------------
+
+The results are filtered based on the word confindence value. Confidence value is a number between 0-100. 0 means that Tesseract wasn't really sure about the detected word and 100 means that Tesseract is sure that the word is what it is.
+
+Currently there's hardcoded limit of 20 for the confidence. Words with confidence value less than that are removed from the results.
 
 Test image and result
 ---------------------
