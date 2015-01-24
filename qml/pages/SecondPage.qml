@@ -51,7 +51,15 @@ Page {
             id: pholder
             anchors.centerIn: parent
             enabled: loading
-            text: qsTr("Please wait, processing may take several seconds.")
+            text: qsTr("Please wait. Processing may take several seconds.")
+        }
+
+        ViewPlaceholder {
+            id: statusholder
+            anchors.verticalCenterOffset: 200
+            anchors.centerIn: parent
+            enabled: loading
+            text: ""
         }
 
         PullDownMenu {
@@ -90,6 +98,9 @@ Page {
         onAnalyzed: {
             area.text = text;
             loading = false;
+        }
+        onStateChanged: {
+            statusholder.text = state;
         }
     }
 }

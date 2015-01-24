@@ -17,41 +17,55 @@ extern Pix* preprocess(Pix *image,
 
     // convert the 32 bpp image to gray and 8 bpp (leptonica requires 8 bpp)
     image = pixConvertRGBToGrayFast(image);
+    qDebug() << "converted to gray";
     // unsharp mask
     image = pixUnsharpMaskingGray(image, usm_halfwidth, usm_fract);
+    qDebug() << "unsharp mask";
     // adaptive treshold
     if(pixOtsuAdaptiveThreshold(image, sX, sY, smoothX, smoothY, scoreFract, NULL, &image) != 0) {
         return NULL;
     }
+    qDebug() << "adaptive treshold";
     return image;
 }
 
-extern QString run(QString imagepath, tesseract::TessBaseAPI* api) {
+extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status) {
 
+    status = QString("Initializing...");
     PIX *pixs;
-    QString new_path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QString("/test.tif");
 
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
-    img.save(new_path, "tiff", 100);
+    img.save(imagepath, "jpg", 100);
 
-    char* path = new_path.toLocal8Bit().data();
+    char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
+
+    status = QString("Preprocessing the image...");
     pixs = preprocess(pixs, 5, 2.5, 2000, 2000, 0, 0, 0.0);
 
+    /*
+     * Enable this to see the preprocessed image
+     *
     l_uint8* ptr_memory;
     size_t len;
     pixWriteMemBmp(&ptr_memory, &len, pixs);
+    qDebug() << "wrote to mem";
 
     QImage testimage;
     testimage.loadFromData((uchar *)ptr_memory, len);
-    testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QString("/test2.tif"), "tiff", 100);
+    qDebug() << "loaded image from mem";
+    testimage.save(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QString("/test2.jpg"), "jpg", 100);
+    qDebug() << "saved to disk";
+    */
 
     api->Init(NULL, "eng");
     api->SetImage(pixs);
-    // Get OCR result
+    api->SetSourceResolution(300);
+
     char *outText;
+    status = QString("Running OCR...");
     outText = api->GetUTF8Text();
 
     qDebug() << outText;

@@ -28,30 +28,14 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifdef QT_QML_DEBUG
-#include <QtQuick>
-#endif
+import QtQuick 2.0
+import Sailfish.Silica 1.0
+import "pages"
 
-#include <sailfishapp.h>
-#include <QDebug>
-#include <tesseractapi.h>
-#include <QGuiApplication>
-#include <QQuickView>
-#include <QQmlContext>
-#include <QProcess>
-#include <QtGlobal>
-#include <locale.h>
-
-int main(int argc, char *argv[])
+ApplicationWindow
 {
-    setlocale(LC_NUMERIC, "C");
-    qputenv("TESSDATA_PREFIX", "/usr/share/harbour-text-extractor/");
-    QGuiApplication *app = SailfishApp::application(argc, argv);
-    QQuickView *view = SailfishApp::createView();
-    TesseractAPI interface;
-    view->rootContext()->setContextProperty("tesseractAPI", &interface);
-    view->setSource(SailfishApp::pathTo("qml/harbour-text-extractor.qml"));
-    view->showFullScreen();
-    app->exec();
+    initialPage: Component { FirstPage { } }
+    cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }
+
 

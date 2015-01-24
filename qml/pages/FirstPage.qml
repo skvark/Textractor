@@ -73,7 +73,6 @@ Page {
                 }
 
                 exposure {
-                    exposureCompensation: 1.0
                     exposureMode: Camera.ExposurePortrait
                 }
 
@@ -82,7 +81,7 @@ Page {
             VideoOutput {
                id: videoPreview
                source: camera
-               width: 480
+               width: 500
                anchors.centerIn: parent
            }
         }

@@ -13,6 +13,6 @@ extern Pix *preprocess(Pix *image,
                        int smoothY,
                        float scoreFract);
 
-extern QString run(QString imagepath, tesseract::TessBaseAPI* api);
+extern QString run(QString imagepath, tesseract::TessBaseAPI* api, QString &status);
 
 #endif // IMAGEPROCESSOR_H
