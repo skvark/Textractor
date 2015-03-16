@@ -33,6 +33,14 @@ Page {
             text: ""
         }
 
+        ViewPlaceholder {
+            id: statusholder2
+            anchors.verticalCenterOffset: 300
+            anchors.centerIn: parent
+            enabled: loading
+            text: ""
+        }
+
         PullDownMenu {
             MenuItem {
                 text: qsTr("Copy Text to Clipboard");
@@ -89,6 +97,9 @@ Page {
         }
         onStateChanged: {
             statusholder.text = state;
+        }
+        onPercentageChanged: {
+            statusholder2.text = percentage.toString() + " %";
         }
     }
 }

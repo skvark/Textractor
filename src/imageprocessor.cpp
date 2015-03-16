@@ -1,5 +1,6 @@
 #include "imageprocessor.h"
 #include <leptonica/allheaders.h>
+#include <tesseract/ocrclass.h>
 #include <QString>
 #include <QDebug>
 #include <QStandardPaths>
@@ -30,7 +31,7 @@ extern Pix* preprocess(Pix *image,
     return image;
 }
 
-extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status) {
+extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status, ETEXT_DESC* monitor) {
 
     status = QString("Initializing...");
     PIX *pixs;
@@ -38,13 +39,14 @@ extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &stat
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
+    img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
     img.save(imagepath, "jpg", 100);
 
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
 
     status = QString("Preprocessing the image...");
-    pixs = preprocess(pixs, 5, 2.5, 2000, 2000, 0, 0, 0.0);
+    pixs = preprocess(pixs, 5, 2.0, 200, 200, 0, 0, 0.0);
 
     /*
      * Enable this to see the preprocessed image
@@ -67,6 +69,7 @@ extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &stat
 
     char *outText;
     status = QString("Running OCR...");
+    api->Recognize(monitor);
     outText = api->GetUTF8Text();
 
     status = QString("Postprocessing...");

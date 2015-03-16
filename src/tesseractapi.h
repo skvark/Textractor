@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QString>
 #include <QFuture>
-#include <tesseract/baseapi.h>
+#include "tesseract/baseapi.h"
+#include "tesseract/ocrclass.h"
 #include <leptonica/allheaders.h>
 #include <QFutureWatcher>
 #include <QTimer>
@@ -26,6 +27,7 @@ signals:
     // Emitted when timer_ fires to update
     // the processing thread status to the UI
     void stateChanged(QString state);
+    void percentageChanged(int percentage);
 
 public slots:
     // Handler for the QFutureWatcher result
@@ -39,6 +41,8 @@ tesseract::TessBaseAPI *api_;
 QFutureWatcher<QString> *watcher_;
 QString status_;
 QTimer *timer_;
+
+ETEXT_DESC *monitor_;
 
 };
 
