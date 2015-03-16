@@ -42,11 +42,11 @@ Test image and result
 
 Original:
 
-![preview](http://relativity.fi/textextractor/original.jpg)
+![preview0](http://relativity.fi/textextractor/original.jpg)
 
 Preprocessed
 
-![preview](http://relativity.fi/textextractor/preprocessed.jpg)
+![preview01](http://relativity.fi/textextractor/preprocessed.jpg)
 
 Extracted text:
 
@@ -68,3 +68,11 @@ covers i  _
 The current wlease of Sailﬁsh Silica is based on Qt 5.0 and QtQuick 2. Sailﬁsh applicationsﬁshouldtp
 import version 2.0 of the QtQuick module. a ‘ p _  f
 ````
+Screenshots
+-----------
+
+![preview1](http://relativity.fi/textextractor/20150124230240.jpg)
+![preview2](http://relativity.fi/textextractor/20150124230321.jpg)
+![preview3](http://relativity.fi/textextractor/20150124230358.jpg)
+![preview4](http://relativity.fi/textextractor/20150124230430.jpg)
+![preview5](http://relativity.fi/textextractor/20150124230449.jpg)
