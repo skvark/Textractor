@@ -35,6 +35,7 @@ void TesseractAPI::analyze(QString imagepath)
     // Since the QtConcurrent::run creates internal copies of the parameters
     // the status parameter is passed as wrapped reference using std::ref().
     // Note that std::ref is a C++11 feature.
+    monitor_->progress = 0;
     QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, std::ref(status_), monitor_);
     watcher_->setFuture(future);
 

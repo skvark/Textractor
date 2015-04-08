@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
     // Set the tessdata directory prefix env variable
     qputenv("TESSDATA_PREFIX", "/usr/share/harbour-textractor/");
 
+    QCoreApplication::setApplicationName("harbour-textractor");
+    QCoreApplication::setOrganizationName("harbour-textractor");
+
     QGuiApplication *app = SailfishApp::application(argc, argv);
     QQuickView *view = SailfishApp::createView();
 

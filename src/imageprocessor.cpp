@@ -8,71 +8,29 @@
 #include <QImage>
 #include <QStringList>
 
-extern Pix* preprocess(Pix *image,
-                       int usm_halfwidth,
-                       float usm_fract,
-                       int sX,
-                       int sY,
-                       int smoothX,
-                       int smoothY,
-                       float scoreFract) {
+extern Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
 
-    // convert the 32 bpp image to gray and 8 bpp (leptonica requires 8 bpp)
     image = pixConvertRGBToGrayFast(image);
-    // qDebug() << "converted to gray";
-    // unsharp mask
-    image = pixUnsharpMaskingGray(image, usm_halfwidth, usm_fract);
-    // qDebug() << "unsharp mask";
-    // adaptive treshold
-    if(pixOtsuAdaptiveThreshold(image, sX, sY, smoothX, smoothY, scoreFract, NULL, &image) != 0) {
-        return NULL;
-    }
-    // qDebug() << "adaptive treshold";
+    image = pixUnsharpMaskingGray(image, 5, 2.5);
+    l_int32 pthresh;
+    image = pixOtsuThreshOnBackgroundNorm(image, NULL, sX, sY, smoothX, smoothY, 100, 50, 255, scoreFract, &pthresh);
     return image;
+
 }
 
-extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status, ETEXT_DESC* monitor) {
+extern void writeToDisk(Pix *img) {
 
-    status = QString("Initializing...");
-    PIX *pixs;
-
-    QImage img(imagepath);
-    img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
-    img.setDotsPerMeterY(11811.025);
-    img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
-    img.save(imagepath, "jpg", 100);
-
-    char* path = imagepath.toLocal8Bit().data();
-    pixs = pixRead(path);
-
-    status = QString("Preprocessing the image...");
-    pixs = preprocess(pixs, 5, 2.0, 200, 200, 0, 0, 0.0);
-
-    /*
-     * Enable this to see the preprocessed image
-     *
     l_uint8* ptr_memory;
     size_t len;
-    pixWriteMemBmp(&ptr_memory, &len, pixs);
-    qDebug() << "wrote to mem";
+    pixWriteMemBmp(&ptr_memory, &len, img);
 
     QImage testimage;
     testimage.loadFromData((uchar *)ptr_memory, len);
-    qDebug() << "loaded image from mem";
-    testimage.save(QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QString("/test2.jpg"), "jpg", 100);
-    qDebug() << "saved to disk";
-    */
+    testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QString("/textractor_preprocessed.jpg"), "jpg", 100);
 
-    api->Init(NULL, "eng");
-    api->SetImage(pixs);
-    api->SetSourceResolution(300);
+}
 
-    char *outText;
-    status = QString("Running OCR...");
-    api->Recognize(monitor);
-    outText = api->GetUTF8Text();
-
-    status = QString("Postprocessing...");
+extern QString clean(char* outText, tesseract::TessBaseAPI *api) {
 
     QString text = QString::fromLocal8Bit(outText);
 
@@ -88,10 +46,45 @@ extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &stat
         ++i;
     }
 
-    text = results.join(" ");
+    text = results.join(" ").toUtf8();
 
     delete [] confidences;
     delete [] outText;
+    return text;
+}
+
+extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status, ETEXT_DESC* monitor) {
+
+    status = QString("Initializing...");
+    PIX *pixs;
+
+    QImage img(imagepath);
+    img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
+    img.setDotsPerMeterY(11811.025);
+    // if scaled up, the image will take a lot of space and OCR becomes really slow
+    img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
+    img.save(imagepath, "jpg", 100);
+
+    char* path = imagepath.toLocal8Bit().data();
+    pixs = pixRead(path);
+
+    status = QString("Preprocessing the image...");
+    pixs = preprocess(pixs, 200, 200, 0, 0, 0.09);
+
+    writeToDisk(pixs);
+
+    api->Init(NULL, "eng");
+    api->SetPageSegMode(tesseract::PSM_AUTO);
+    api->SetImage(pixs);
+    api->SetSourceResolution(300);
+
+    char *outText;
+    status = QString("Running OCR...");
+    api->Recognize(monitor);
+    outText = api->GetUTF8Text();
+
+    status = QString("Postprocessing...");
     pixDestroy(&pixs);
-    return text.toUtf8();
+
+    return clean(outText, api);
 }

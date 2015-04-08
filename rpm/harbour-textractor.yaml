@@ -31,8 +31,6 @@ PkgConfigBR:
 #   - package-needed-to-build
 
 PkgBR:
-   - tesseract
-   - leptonica
 
 # Runtime dependencies which are not automatically detected
 Requires:
