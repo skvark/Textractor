@@ -8,12 +8,17 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     QObject(parent)
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-    api_ = new tesseract::TessBaseAPI();
-    if (api_->Init(NULL, "eng")) {
-        qDebug() << "Could not initialize tesseract.";
-    }
+
     timer_ = new QTimer(this);
     monitor_ = new ETEXT_DESC();
+    settingsManager_ = new SettingsManager();
+
+    api_ = new tesseract::TessBaseAPI();
+    QString lang = settingsManager_->getLanguageCode();
+
+    if (settingsManager_->getLanguageCode().length() == 0) {
+        emit firstUse();
+    }
 }
 
 TesseractAPI::~TesseractAPI()
@@ -24,6 +29,8 @@ TesseractAPI::~TesseractAPI()
     api_ = 0;
     delete monitor_;
     monitor_ = 0;
+    delete settingsManager_;
+    settingsManager_ = 0;
 }
 
 void TesseractAPI::analyze(QString imagepath)
@@ -36,12 +43,17 @@ void TesseractAPI::analyze(QString imagepath)
     // the status parameter is passed as wrapped reference using std::ref().
     // Note that std::ref is a C++11 feature.
     monitor_->progress = 0;
-    QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, std::ref(status_), monitor_);
+    QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, std::ref(status_), monitor_, settingsManager_);
     watcher_->setFuture(future);
 
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
     timer_->start(500);
+}
+
+SettingsManager *TesseractAPI::settings() const
+{
+    return settingsManager_;
 }
 
 void TesseractAPI::handleAnalyzed()

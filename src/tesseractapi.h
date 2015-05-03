@@ -9,16 +9,20 @@
 #include <leptonica/allheaders.h>
 #include <QFutureWatcher>
 #include <QTimer>
+#include <settings.h>
 
 class TesseractAPI : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(SettingsManager* settings READ settings CONSTANT)
+
 public:
     explicit TesseractAPI(QObject *parent = 0);
     ~TesseractAPI();
 
     // Does the whole analyzing process
     Q_INVOKABLE void analyze(QString imagepath);
+    SettingsManager *settings() const;
 
 signals:
     // Emitted when the OCR is done,
@@ -28,6 +32,7 @@ signals:
     // the processing thread status to the UI
     void stateChanged(QString state);
     void percentageChanged(int percentage);
+    void firstUse();
 
 public slots:
     // Handler for the QFutureWatcher result
@@ -43,6 +48,8 @@ QString status_;
 QTimer *timer_;
 
 ETEXT_DESC *monitor_;
+
+SettingsManager *settingsManager_;
 
 };
 

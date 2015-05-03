@@ -25,7 +25,8 @@ QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 SOURCES += \
     src/tesseractapi.cpp \
     src/imageprocessor.cpp \
-    src/harbour-textractor.cpp
+    src/harbour-textractor.cpp \
+    src/settings.cpp
 
 OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
@@ -38,13 +39,16 @@ OTHER_FILES += qml/harbour-textractor.qml \
     harbour-textractor.desktop \
     README.md \
     qml/pages/EditPage.qml \
-    qml/pages/HintsPage.qml
+    qml/pages/HintsPage.qml \
+    qml/pages/Settings.qml \
+    qml/pages/LanguageDialog.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
-CONFIG += sailfishapp_i18n
+# CONFIG += sailfishapp_i18n
 
 HEADERS += \
     src/tesseractapi.h \
-    src/imageprocessor.h
+    src/imageprocessor.h \
+    src/settings.h
 

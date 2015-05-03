@@ -8,7 +8,7 @@
 #include <QImage>
 #include <QStringList>
 
-extern Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
+Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
 
     image = pixConvertRGBToGrayFast(image);
     image = pixUnsharpMaskingGray(image, 5, 2.5);
@@ -18,7 +18,7 @@ extern Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, flo
 
 }
 
-extern void writeToDisk(Pix *img) {
+void writeToDisk(Pix *img) {
 
     l_uint8* ptr_memory;
     size_t len;
@@ -26,11 +26,11 @@ extern void writeToDisk(Pix *img) {
 
     QImage testimage;
     testimage.loadFromData((uchar *)ptr_memory, len);
-    testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QString("/textractor_preprocessed.jpg"), "jpg", 100);
-
+    testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+                   QString("/textractor_preprocessed.jpg"), "jpg", 100);
 }
 
-extern QString clean(char* outText, tesseract::TessBaseAPI *api) {
+QString clean(char* outText, tesseract::TessBaseAPI *api) {
 
     QString text = QString::fromLocal8Bit(outText);
 
@@ -53,7 +53,11 @@ extern QString clean(char* outText, tesseract::TessBaseAPI *api) {
     return text;
 }
 
-extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &status, ETEXT_DESC* monitor) {
+QString run(QString imagepath,
+            tesseract::TessBaseAPI *api,
+            QString &status,
+            ETEXT_DESC* monitor,
+            SettingsManager *settings) {
 
     status = QString("Initializing...");
     PIX *pixs;
@@ -73,7 +77,7 @@ extern QString run(QString imagepath, tesseract::TessBaseAPI *api, QString &stat
 
     writeToDisk(pixs);
 
-    api->Init(NULL, "eng");
+    api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data());
     api->SetPageSegMode(tesseract::PSM_AUTO);
     api->SetImage(pixs);
     api->SetSourceResolution(300);

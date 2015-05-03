@@ -24,6 +24,14 @@ Page {
         }
 
         PullDownMenu {
+
+            MenuItem {
+                text: qsTr("Settings");
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("Settings.qml"))
+                }
+            }
+
             MenuItem {
                 text: qsTr("Usage Hints");
                 onClicked: {

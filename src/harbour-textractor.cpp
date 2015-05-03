@@ -11,6 +11,8 @@
 #include <QProcess>
 #include <QtGlobal>
 #include <locale.h>
+#include <settings.h>
+#include <QtQml>
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +29,7 @@ int main(int argc, char *argv[])
 
     TesseractAPI interface;
     view->rootContext()->setContextProperty("tesseractAPI", &interface);
+    qmlRegisterType<SettingsManager>("harbour.textractor.settingsmanager", 1, 0, "SettingsManager");
 
     view->setSource(SailfishApp::pathTo("qml/harbour-textractor.qml"));
     view->showFullScreen();
