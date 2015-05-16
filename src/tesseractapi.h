@@ -21,7 +21,7 @@ public:
     ~TesseractAPI();
 
     // Does the whole analyzing process
-    Q_INVOKABLE void analyze(QString imagepath);
+    Q_INVOKABLE void analyze(QString imagepath, int rotation);
     SettingsManager *settings() const;
 
 signals:
@@ -44,7 +44,7 @@ private:
 
 tesseract::TessBaseAPI *api_;
 QFutureWatcher<QString> *watcher_;
-QString status_;
+QPair<QString, int> info_;
 QTimer *timer_;
 
 ETEXT_DESC *monitor_;

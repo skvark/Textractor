@@ -33,7 +33,7 @@ TesseractAPI::~TesseractAPI()
     settingsManager_ = 0;
 }
 
-void TesseractAPI::analyze(QString imagepath)
+void TesseractAPI::analyze(QString imagepath, int rotation)
 {
     // Run the cpu-heavy stuff in another thread.
     watcher_ = new QFutureWatcher<QString>();
@@ -43,7 +43,8 @@ void TesseractAPI::analyze(QString imagepath)
     // the status parameter is passed as wrapped reference using std::ref().
     // Note that std::ref is a C++11 feature.
     monitor_->progress = 0;
-    QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, std::ref(status_), monitor_, settingsManager_);
+    info_ = qMakePair(QString("Initializing..."), rotation);
+    QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, monitor_, settingsManager_, std::ref(info_));
     watcher_->setFuture(future);
 
     // Periodically firing timer to get progress reports to the UI.
@@ -72,8 +73,8 @@ void TesseractAPI::handleAnalyzed()
 }
 
 void TesseractAPI::update() {
-    if(status_ == "Running OCR...") {
+    if(info_.first == "Running OCR...") {
         emit percentageChanged(monitor_->progress);
     }
-    emit stateChanged(status_);
+    emit stateChanged(info_.first);
 }

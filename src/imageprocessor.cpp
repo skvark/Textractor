@@ -7,6 +7,7 @@
 #include <QImageWriter>
 #include <QImage>
 #include <QStringList>
+#include <QTransform>
 
 Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
 
@@ -55,24 +56,26 @@ QString clean(char* outText, tesseract::TessBaseAPI *api) {
 
 QString run(QString imagepath,
             tesseract::TessBaseAPI *api,
-            QString &status,
             ETEXT_DESC* monitor,
-            SettingsManager *settings) {
+            SettingsManager *settings,
+            QPair<QString, int> &info) {
 
-    status = QString("Initializing...");
+    info.first = QString("Initializing...");
     PIX *pixs;
 
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
+    QTransform transform;
+    img = img.transformed(transform.rotate(info.second));
     // if scaled up, the image will take a lot of space and OCR becomes really slow
-    img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
+    //img = img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
     img.save(imagepath, "jpg", 100);
 
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
 
-    status = QString("Preprocessing the image...");
+    info.first = QString("Preprocessing the image...");
     pixs = preprocess(pixs, 200, 200, 0, 0, 0.09);
 
     writeToDisk(pixs);
@@ -83,12 +86,13 @@ QString run(QString imagepath,
     api->SetSourceResolution(300);
 
     char *outText;
-    status = QString("Running OCR...");
+    info.first = QString("Running OCR...");
     api->Recognize(monitor);
     outText = api->GetUTF8Text();
 
-    status = QString("Postprocessing...");
+    info.first = QString("Postprocessing...");
     pixDestroy(&pixs);
+    api->Clear();
 
     return clean(outText, api);
 }

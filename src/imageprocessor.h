@@ -4,6 +4,7 @@
 #include <tesseract/baseapi.h>
 #include <QString>
 #include <settings.h>
+#include <QPair>
 
 Pix *preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract);
 
@@ -13,8 +14,8 @@ QString clean(char* outText, tesseract::TessBaseAPI *api);
 
 QString run(QString imagepath,
             tesseract::TessBaseAPI* api,
-            QString &status,
             ETEXT_DESC *monitor,
-            SettingsManager *settings);
+            SettingsManager *settings,
+            QPair<QString, int> &info);
 
 #endif // IMAGEPROCESSOR_H
