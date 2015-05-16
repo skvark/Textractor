@@ -15,6 +15,13 @@ Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scor
     image = pixUnsharpMaskingGray(image, 5, 2.5);
     l_int32 pthresh;
     image = pixOtsuThreshOnBackgroundNorm(image, NULL, sX, sY, smoothX, smoothY, 100, 50, 255, scoreFract, &pthresh);
+    l_float32 angle;
+    Pix* image_deskewed;
+    image_deskewed = pixFindSkewAndDeskew(image, 1, &angle, NULL);
+    if(image_deskewed != NULL) {
+        pixDestroy(&image);
+        return image_deskewed;
+    }
     return image;
 
 }
@@ -61,7 +68,7 @@ QString run(QString imagepath,
             QPair<QString, int> &info) {
 
     info.first = QString("Initializing...");
-    PIX *pixs;
+    Pix *pixs;
 
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
@@ -80,7 +87,9 @@ QString run(QString imagepath,
 
     writeToDisk(pixs);
 
-    api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data());
+    if(api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data())) {
+        qDebug() << "fail";
+    }
     api->SetPageSegMode(tesseract::PSM_AUTO);
     api->SetImage(pixs);
     api->SetSourceResolution(300);
@@ -92,7 +101,8 @@ QString run(QString imagepath,
 
     info.first = QString("Postprocessing...");
     pixDestroy(&pixs);
-    api->Clear();
 
-    return clean(outText, api);
+    QString text = clean(outText, api);
+    api->Clear();
+    return text;
 }
