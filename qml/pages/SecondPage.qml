@@ -9,7 +9,11 @@ Page {
     SilicaFlickable {
         id: textcontainer
         anchors.fill: parent
-        contentHeight: textholder.height
+        contentHeight: if(textholder.height < page.height) {
+                           return page.height;
+                       } else {
+                           textholder.height
+                       }
 
         BusyIndicator {
             anchors.centerIn: parent
@@ -71,16 +75,16 @@ Page {
             anchors.leftMargin: Theme.paddingLarge
             anchors.rightMargin: Theme.paddingLarge
             anchors.topMargin: Theme.paddingLarge
-            height: 900
+            height: childrenRect.height
 
-            Label {
+            Text {
                 id: area
                 width: parent.width
                 wrapMode: Text.Wrap
                 anchors.topMargin: Theme.paddingLarge
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.primaryColor
-                textFormat: Text.RichText;
+                textFormat: Text.PlainText;
                 onLinkActivated: Qt.openUrlExternally(link)
                 text: ""
             }

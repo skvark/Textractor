@@ -13,8 +13,8 @@ void writeToDisk(Pix *img);
 QString clean(char* outText, tesseract::TessBaseAPI *api);
 
 QString run(QString imagepath,
-            tesseract::TessBaseAPI* api,
             ETEXT_DESC *monitor,
+            tesseract::TessBaseAPI* api,
             SettingsManager *settings,
             QPair<QString, int> &info);
 

@@ -13,8 +13,9 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     monitor_ = new ETEXT_DESC();
     settingsManager_ = new SettingsManager();
 
-    api_ = new tesseract::TessBaseAPI();
     QString lang = settingsManager_->getLanguageCode();
+
+    api_ = new tesseract::TessBaseAPI();
 
     if (settingsManager_->getLanguageCode().length() == 0) {
         emit firstUse();
@@ -23,14 +24,15 @@ TesseractAPI::TesseractAPI(QObject *parent) :
 
 TesseractAPI::~TesseractAPI()
 {
-    // End the api (releases memory)
-    api_->End();
-    delete api_;
-    api_ = 0;
     delete monitor_;
     monitor_ = 0;
     delete settingsManager_;
     settingsManager_ = 0;
+    delete timer_;
+    timer_ = 0;
+    api_->End();
+    delete api_;
+    api_ = 0;
 }
 
 void TesseractAPI::analyze(QString imagepath, int rotation)
@@ -44,7 +46,7 @@ void TesseractAPI::analyze(QString imagepath, int rotation)
     // Note that std::ref is a C++11 feature.
     monitor_->progress = 0;
     info_ = qMakePair(QString("Initializing..."), rotation);
-    QFuture<QString> future = QtConcurrent::run(run, imagepath, api_, monitor_, settingsManager_, std::ref(info_));
+    QFuture<QString> future = QtConcurrent::run(run, imagepath, monitor_, api_, settingsManager_, std::ref(info_));
     watcher_->setFuture(future);
 
     // Periodically firing timer to get progress reports to the UI.

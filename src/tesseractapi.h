@@ -42,7 +42,7 @@ public slots:
 
 private:
 
-tesseract::TessBaseAPI *api_;
+tesseract::TessBaseAPI* api_;
 QFutureWatcher<QString> *watcher_;
 QPair<QString, int> info_;
 QTimer *timer_;

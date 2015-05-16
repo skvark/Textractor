@@ -11,18 +11,32 @@
 
 Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
 
-    image = pixConvertRGBToGrayFast(image);
-    image = pixUnsharpMaskingGray(image, 5, 2.5);
-    l_int32 pthresh;
-    image = pixOtsuThreshOnBackgroundNorm(image, NULL, sX, sY, smoothX, smoothY, 100, 50, 255, scoreFract, &pthresh);
-    l_float32 angle;
     Pix* image_deskewed;
-    image_deskewed = pixFindSkewAndDeskew(image, 1, &angle, NULL);
+    Pix* image1;
+    Pix* image2;
+    Pix* image3;
+
+    image1 = pixConvertRGBToGrayFast(image);
+    image2 = pixUnsharpMaskingGray(image1, 5, 2.5);
+
+    l_int32 pthresh;
+    image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY, smoothX, smoothY, 100, 50, 255, scoreFract, &pthresh);
+
+    l_float32 angle;
+    image_deskewed = pixFindSkewAndDeskew(image3, 1, &angle, NULL);
+
     if(image_deskewed != NULL) {
         pixDestroy(&image);
+        pixDestroy(&image1);
+        pixDestroy(&image2);
+        pixDestroy(&image3);
         return image_deskewed;
     }
-    return image;
+
+    pixDestroy(&image);
+    pixDestroy(&image1);
+    pixDestroy(&image2);
+    return image3;
 
 }
 
@@ -36,6 +50,9 @@ void writeToDisk(Pix *img) {
     testimage.loadFromData((uchar *)ptr_memory, len);
     testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
                    QString("/textractor_preprocessed.jpg"), "jpg", 100);
+    delete ptr_memory;
+    ptr_memory = NULL;
+
 }
 
 QString clean(char* outText, tesseract::TessBaseAPI *api) {
@@ -62,8 +79,8 @@ QString clean(char* outText, tesseract::TessBaseAPI *api) {
 }
 
 QString run(QString imagepath,
-            tesseract::TessBaseAPI *api,
             ETEXT_DESC* monitor,
+            tesseract::TessBaseAPI* api,
             SettingsManager *settings,
             QPair<QString, int> &info) {
 
