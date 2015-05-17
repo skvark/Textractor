@@ -20,16 +20,19 @@ SettingsManager::~SettingsManager() {
 
 void SettingsManager::resetToDefaults()
 {
-    return;
+    setTileSize(200);
+    setMinCount(50);
+    setBgVal(255);
+    setScoreFract(0.09);
+    setSmoothingFactor(0);
+    setThreshold(100);
+    settings_->sync();
 }
 
 void SettingsManager::setLanguage(QString language)
 {
-    QVariant data;
     if(!language.isEmpty()) {
-        data = QVariant::fromValue(languages.key(language));
-        settings_->setValue("language", data);
-        settings_->sync();
+        settings_->setValue("language", toQVariant(languages.key(language)));
     }
 }
 
@@ -51,4 +54,64 @@ QString SettingsManager::getLanguage()
 int SettingsManager::getLangIndex()
 {
     return langs_.indexOf(getLanguage());
+}
+
+void SettingsManager::setTileSize(int size)
+{
+    settings_->setValue("tilesize", toQVariant(size));
+}
+
+int SettingsManager::getTileSize()
+{
+    return settings_->value("tilesize").toInt();
+}
+
+void SettingsManager::setSmoothingFactor(int factor)
+{
+    settings_->setValue("factor", toQVariant(factor));
+}
+
+int SettingsManager::getSmoothingFactor()
+{
+    return settings_->value("factor").toInt();
+}
+
+void SettingsManager::setThreshold(int treshold)
+{
+    settings_->setValue("threshold", toQVariant(treshold));
+}
+
+int SettingsManager::getThreshold()
+{
+    return settings_->value("threshold").toInt();
+}
+
+void SettingsManager::setMinCount(int mincount)
+{
+    settings_->setValue("mincount", toQVariant(mincount));
+}
+
+int SettingsManager::getMinCount()
+{
+    return settings_->value("mincount").toInt();
+}
+
+void SettingsManager::setBgVal(int bgval)
+{
+    settings_->setValue("bgval", toQVariant(bgval));
+}
+
+int SettingsManager::getBgVal()
+{
+    return settings_->value("bgval").toInt();
+}
+
+void SettingsManager::setScoreFract(float scorefract)
+{
+    settings_->setValue("scorefract", toQVariant(scorefract));
+}
+
+float SettingsManager::getScoreFract()
+{
+    return settings_->value("scorefract").toDouble();
 }

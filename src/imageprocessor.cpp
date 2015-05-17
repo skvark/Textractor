@@ -9,7 +9,10 @@
 #include <QStringList>
 #include <QTransform>
 
-Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract) {
+Pix* preprocess(Pix *image, int sX, int sY,
+                int threshold, int mincount,
+                int bgval, int smoothX,
+                int smoothY, float scoreFract) {
 
     Pix* image_deskewed;
     Pix* image1;
@@ -20,7 +23,10 @@ Pix* preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scor
     image2 = pixUnsharpMaskingGray(image1, 5, 2.5);
 
     l_int32 pthresh;
-    image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY, smoothX, smoothY, 100, 50, 255, scoreFract, &pthresh);
+    image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY,
+                                           threshold, mincount, bgval,
+                                           smoothX, smoothY,
+                                           scoreFract, &pthresh);
 
     l_float32 angle;
     image_deskewed = pixFindSkewAndDeskew(image3, 1, &angle, NULL);
@@ -100,7 +106,10 @@ QString run(QString imagepath,
     pixs = pixRead(path);
 
     info.first = QString("Preprocessing the image...");
-    pixs = preprocess(pixs, 200, 200, 0, 0, 0.09);
+    pixs = preprocess(pixs, settings->getTileSize(), settings->getTileSize(),
+                      settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),
+                      settings->getSmoothingFactor(), settings->getSmoothingFactor(),
+                      settings->getScoreFract());
 
     writeToDisk(pixs);
 

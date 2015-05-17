@@ -6,7 +6,10 @@
 #include <settings.h>
 #include <QPair>
 
-Pix *preprocess(Pix *image, int sX, int sY, int smoothX, int smoothY, float scoreFract);
+Pix* preprocess(Pix *image, int sX, int sY,
+                int threshold, int mincount,
+                int bgval, int smoothX,
+                int smoothY, float scoreFract);
 
 void writeToDisk(Pix *img);
 

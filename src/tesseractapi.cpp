@@ -18,6 +18,7 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     api_ = new tesseract::TessBaseAPI();
 
     if (settingsManager_->getLanguageCode().length() == 0) {
+        settingsManager_->resetToDefaults();
         emit firstUse();
     }
 }
@@ -52,6 +53,12 @@ void TesseractAPI::analyze(QString imagepath, int rotation)
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
     timer_->start(500);
+}
+
+void TesseractAPI::resetSettings()
+{
+    settingsManager_->resetToDefaults();
+    emit reset();
 }
 
 SettingsManager *TesseractAPI::settings() const

@@ -22,6 +22,7 @@ public:
 
     // Does the whole analyzing process
     Q_INVOKABLE void analyze(QString imagepath, int rotation);
+    Q_INVOKABLE void resetSettings();
     SettingsManager *settings() const;
 
 signals:
@@ -33,6 +34,7 @@ signals:
     void stateChanged(QString state);
     void percentageChanged(int percentage);
     void firstUse();
+    void reset();
 
 public slots:
     // Handler for the QFutureWatcher result

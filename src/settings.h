@@ -91,16 +91,45 @@ public:
 
     Q_INVOKABLE void resetToDefaults();
 
+    // language settings
+
     Q_INVOKABLE void setLanguage(QString language);
     Q_INVOKABLE QString getLanguage();
     Q_INVOKABLE int getLangIndex();
     Q_INVOKABLE QString getLanguageCode();
     Q_INVOKABLE QStringList getLanguageList();
 
+    // image processing settings
+
+    Q_INVOKABLE void setTileSize(int size);
+    Q_INVOKABLE int getTileSize();
+
+    Q_INVOKABLE void setSmoothingFactor(int factor);
+    Q_INVOKABLE int getSmoothingFactor();
+
+    Q_INVOKABLE void setThreshold(int treshold);
+    Q_INVOKABLE int getThreshold();
+
+    Q_INVOKABLE void setMinCount(int mincount);
+    Q_INVOKABLE int getMinCount();
+
+    Q_INVOKABLE void setBgVal(int bgval);
+    Q_INVOKABLE int getBgVal();
+
+    Q_INVOKABLE void setScoreFract(float scorefract);
+    Q_INVOKABLE float getScoreFract();
+
 signals:
     void reset();
 
 private:
+
+    template <typename T>
+    QVariant toQVariant(const T value)
+    {
+        return QVariant::fromValue(value);
+    }
+
     QSettings *settings_;
     QStringList langs_;
 };
