@@ -15,6 +15,7 @@ TARGET = harbour-textractor
 CONFIG += sailfishapp
 CONFIG += c++11
 QT += multimedia
+QT += network
 
 INCLUDEPATH += src/
 
@@ -26,12 +27,11 @@ SOURCES += \
     src/tesseractapi.cpp \
     src/imageprocessor.cpp \
     src/harbour-textractor.cpp \
-    src/settings.cpp
+    src/settings.cpp \
+    src/dowloadmanager.cpp
 
 OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
-    qml/pages/SecondPage.qml \
     translations/*.ts \
     rpm/harbour-textractor.spec \
     rpm/harbour-textractor.yaml \
@@ -41,7 +41,12 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/EditPage.qml \
     qml/pages/HintsPage.qml \
     qml/pages/Settings.qml \
-    qml/pages/LanguageDialog.qml
+    qml/pages/LanguageDialog.qml \
+    qml/pages/DownloadDialog.qml \
+    qml/pages/CameraPage.qml \
+    qml/pages/ResultsPage.qml \
+    qml/pages/MainPage.qml \
+    qml/pages/DownloadPage.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
@@ -50,5 +55,6 @@ OTHER_FILES += qml/harbour-textractor.qml \
 HEADERS += \
     src/tesseractapi.h \
     src/imageprocessor.h \
-    src/settings.h
+    src/settings.h \
+    src/dowloadmanager.h
 

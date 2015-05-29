@@ -9,37 +9,6 @@ Page {
     SilicaListView {
 
         anchors.fill: parent
-        header: Component {
-
-            PageHeader {
-                title: "Take a Picture of Text"
-                height: 140
-
-                SectionHeader {
-                    id: section
-                    text: "To get best results see hints page."
-                    anchors.top: parent.top
-                    anchors.topMargin: 60
-                }
-            }
-        }
-
-        PullDownMenu {
-
-            MenuItem {
-                text: qsTr("Settings");
-                onClicked: {
-                    pageStack.push(Qt.resolvedUrl("Settings.qml"))
-                }
-            }
-
-            MenuItem {
-                text: qsTr("Usage Hints");
-                onClicked: {
-                    pageStack.push(Qt.resolvedUrl("HintsPage.qml"))
-                }
-            }
-        }
 
         Item {
             id: cameraOutput
@@ -130,7 +99,7 @@ Page {
         onImageSaved: {
             camera.cameraState = Camera.UnloadedState
             tesseractAPI.analyze(path, picRotation);
-            pageStack.push(Qt.resolvedUrl("SecondPage.qml"), { loading: true })
+            pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
         }
     }
 

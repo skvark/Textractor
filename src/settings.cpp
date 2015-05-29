@@ -1,4 +1,5 @@
 #include "settings.h"
+#include <QDir>
 
 SettingsManager::SettingsManager(QObject *parent) :
     QObject(parent)
@@ -40,6 +41,12 @@ QString SettingsManager::getLanguageCode()
 {
     return settings_->value("language").toString();
 }
+
+QString SettingsManager::getLanguageCode(QString language)
+{
+    return languages.key(language);
+}
+
 
 QStringList SettingsManager::getLanguageList()
 {
@@ -114,4 +121,11 @@ void SettingsManager::setScoreFract(float scorefract)
 float SettingsManager::getScoreFract()
 {
     return settings_->value("scorefract").toDouble();
+}
+
+bool SettingsManager::isLangDataAvailable(QString lang)
+{
+    QDir tessdata = QDir("/home/nemo/.local/share/harbour-textractor/harbour-textractor/tesseract-ocr/tessdata/");
+    QStringList data = tessdata.entryList();
+    return data.contains(languages.key(lang) + QString(".traineddata"));
 }

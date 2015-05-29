@@ -10,6 +10,7 @@
 #include <QFutureWatcher>
 #include <QTimer>
 #include <settings.h>
+#include <dowloadmanager.h>
 
 class TesseractAPI : public QObject
 {
@@ -23,6 +24,10 @@ public:
     // Does the whole analyzing process
     Q_INVOKABLE void analyze(QString imagepath, int rotation);
     Q_INVOKABLE void resetSettings();
+    Q_INVOKABLE bool isLangDownloaded(QString lang);
+    Q_INVOKABLE void downloadLanguage(QString lang);
+    Q_INVOKABLE QString tesseractVersion();
+    Q_INVOKABLE QString leptonicaVersion();
     SettingsManager *settings() const;
 
 signals:
@@ -35,6 +40,9 @@ signals:
     void percentageChanged(int percentage);
     void firstUse();
     void reset();
+    void languageExtracting(QString lang);
+    void languageReady(QString lang);
+    void progressStatus(qint64 downloaded, qint64 total);
 
 public slots:
     // Handler for the QFutureWatcher result
@@ -52,6 +60,7 @@ QTimer *timer_;
 ETEXT_DESC *monitor_;
 
 SettingsManager *settingsManager_;
+DownloadManager *downloadManager_;
 
 };
 

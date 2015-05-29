@@ -104,6 +104,7 @@ QString run(QString imagepath,
 
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
+    delete [] path;
 
     info.first = QString("Preprocessing the image...");
     pixs = preprocess(pixs, settings->getTileSize(), settings->getTileSize(),
@@ -116,6 +117,7 @@ QString run(QString imagepath,
     if(api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data())) {
         qDebug() << "fail";
     }
+
     api->SetPageSegMode(tesseract::PSM_AUTO);
     api->SetImage(pixs);
     api->SetSourceResolution(300);

@@ -97,6 +97,7 @@ public:
     Q_INVOKABLE QString getLanguage();
     Q_INVOKABLE int getLangIndex();
     Q_INVOKABLE QString getLanguageCode();
+    Q_INVOKABLE QString getLanguageCode(QString language);
     Q_INVOKABLE QStringList getLanguageList();
 
     // image processing settings
@@ -118,6 +119,8 @@ public:
 
     Q_INVOKABLE void setScoreFract(float scorefract);
     Q_INVOKABLE float getScoreFract();
+
+    Q_INVOKABLE bool isLangDataAvailable(QString lang);
 
 signals:
     void reset();

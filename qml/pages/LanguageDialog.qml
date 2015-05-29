@@ -22,13 +22,21 @@ Dialog {
        cancelText: "Cancel"
     }
 
+    onStatusChanged: {
+        if(status === PageStatus.Active && selectCompleted) {
+            selectCompleted = false;
+            pageStack.push(Qt.resolvedUrl("DownloadPage.qml"), { language: lang });
+        }
+    }
+
     SilicaListView {
 
         id: listView
         anchors.top: parent.top
-        anchors.topMargin: header.childrenRect.height
+        anchors.topMargin: header.height
         height: parent.height - header.childrenRect.height
         width: parent.width
+
         delegate: ListItem {
 
             id: delegate
@@ -36,18 +44,32 @@ Dialog {
             width: parent.width
             highlighted: listView.currentIndex == index;
 
+            IconButton {
+                icon.source: "image://theme/icon-header-accept"
+                enabled: false;
+                visible: tesseractAPI.settings.isLangDataAvailable(modelData);
+            }
+
             Label {
                 id: label2
                 anchors.fill: parent
                 text: modelData
-                anchors.leftMargin: Theme.paddingLarge
+                anchors.leftMargin: Theme.paddingLarge + Theme.paddingLarge + Theme.paddingLarge
                 verticalAlignment: Text.AlignVCenter
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
 
             onClicked: {
-                listView.currentIndex = index;
-                current = modelData;
+                if(tesseractAPI.settings.isLangDataAvailable(modelData)) {
+                    listView.currentIndex = index;
+                    current = modelData;
+                } else {
+                    var dialog = pageStack.push(Qt.resolvedUrl("DownloadDialog.qml"), { language: modelData });
+                    lang = dialog.language;
+                    dialog.accepted.connect(function() {
+                        selectCompleted = true;
+                    })
+                }
             }
 
         }
@@ -55,4 +77,15 @@ Dialog {
     }
 
     property string current;
+    property bool selectCompleted: false;
+    property string lang;
+
+    Connections {
+        target: tesseractAPI
+
+        onLanguageReady: {
+            listView.model = tesseractAPI.settings.getLanguageList();
+            listView.currentIndex = tesseractAPI.settings.getLangIndex();
+        }
+    }
 }

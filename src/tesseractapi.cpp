@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
 #include "imageprocessor.h"
+#include <QNetworkReply>
 
 TesseractAPI::TesseractAPI(QObject *parent) :
     QObject(parent)
@@ -12,8 +13,12 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     timer_ = new QTimer(this);
     monitor_ = new ETEXT_DESC();
     settingsManager_ = new SettingsManager();
+    downloadManager_ = new DownloadManager();
 
-    QString lang = settingsManager_->getLanguageCode();
+    QObject::connect(downloadManager_, SIGNAL(downloaded(QString)),
+                     this, SIGNAL(languageExtracting(QString)));
+    QObject::connect(downloadManager_, SIGNAL(extracted(QString)),
+                     this, SIGNAL(languageReady(QString)));
 
     api_ = new tesseract::TessBaseAPI();
 
@@ -29,6 +34,8 @@ TesseractAPI::~TesseractAPI()
     monitor_ = 0;
     delete settingsManager_;
     settingsManager_ = 0;
+    delete downloadManager_;
+    downloadManager_ = 0;
     delete timer_;
     timer_ = 0;
     api_->End();
@@ -59,6 +66,32 @@ void TesseractAPI::resetSettings()
 {
     settingsManager_->resetToDefaults();
     emit reset();
+}
+
+bool TesseractAPI::isLangDownloaded(QString lang)
+{
+    return settingsManager_->isLangDataAvailable(lang);
+}
+
+void TesseractAPI::downloadLanguage(QString lang)
+{
+    QNetworkReply* reply = downloadManager_->downloadFile(settingsManager_->getLanguageCode(lang));
+    QObject::connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
+                     this, SIGNAL(progressStatus(qint64, qint64)));
+}
+
+QString TesseractAPI::tesseractVersion()
+{
+    static const char* version = api_->Version();
+    return QString(QByteArray::fromRawData(version, sizeof(version)));
+}
+
+QString TesseractAPI::leptonicaVersion()
+{
+    char* leptVersion = getLeptonicaVersion();
+    QString version(QByteArray::fromRawData(leptVersion, sizeof(version)));
+    delete [] leptVersion;
+    return version;
 }
 
 SettingsManager *TesseractAPI::settings() const
