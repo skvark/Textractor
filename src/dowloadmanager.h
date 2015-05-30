@@ -6,6 +6,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QProcess>
 
 class DownloadManager : public QObject
 {
@@ -17,6 +18,7 @@ public:
 
 public slots:
     void finished(QNetworkReply *reply);
+    void extracted(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
     void downloaded(QString language);
@@ -27,6 +29,8 @@ private:
 
     QNetworkAccessManager nam_;
     QHash<QNetworkReply*, QString > hash_;
+    QProcess *process_;
+    QString language_;
 
     bool checkError(QNetworkReply *finished);
     void dataFileRequest(QNetworkReply *finished, QString language);

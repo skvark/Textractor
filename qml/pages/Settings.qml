@@ -40,33 +40,10 @@ Page {
         }
 
         SectionHeader {
-            id: generalsection
-            text: qsTr("OCR Language")
-            font.pixelSize: Theme.fontSizeMedium
-            anchors.top: headerContainer.bottom
-            height: 50;
-        }
-
-        ValueButton {
-                id: lang
-                label: "Language"
-                anchors.top: generalsection.bottom
-                value: tesseractAPI.settings.getLanguage();
-
-                onClicked: {
-                    var dialog = pageStack.push("LanguageDialog.qml")
-
-                    dialog.accepted.connect(function() {
-                        value = tesseractAPI.settings.getLanguage();
-                    })
-                }
-        }
-
-        SectionHeader {
             id: advancedsection
             text: qsTr("Advanced Settings")
             font.pixelSize: Theme.fontSizeMedium
-            anchors.top: lang.bottom
+            anchors.top: headerContainer.bottom
             anchors.topMargin: 10
             height: 40;
 

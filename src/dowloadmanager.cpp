@@ -1,5 +1,4 @@
 #include "dowloadmanager.h"
-#include <QProcess>
 #include <QDir>
 #include <QStandardPaths>
 #include <QFile>
@@ -13,17 +12,20 @@ QString fileType(".tar.gz");
 DownloadManager::DownloadManager(QObject *parent) :
     QObject(parent)
 {
+    process_ = new QProcess();
     QObject::connect(&nam_, SIGNAL(finished(QNetworkReply*)),
                      this, SLOT(finished(QNetworkReply*)));
 }
 
 DownloadManager::~DownloadManager()
 {
-
+    delete process_;
+    process_ = 0;
 }
 
 QNetworkReply* DownloadManager::downloadFile(QString lang)
 {
+    language_ = lang;
     QUrl url(downloadUrl + lang + fileType);
     QNetworkRequest request(url);
     QNetworkReply *reply = nam_.get(request);
@@ -37,6 +39,13 @@ void DownloadManager::finished(QNetworkReply *reply)
         dataFileRequest(reply, hash_[reply]);
     }
     hash_.remove(reply);
+}
+
+void DownloadManager::extracted(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    if(exitStatus == QProcess::NormalExit) {
+        emit extracted(language_);
+    }
 }
 
 bool DownloadManager::checkError(QNetworkReply *finished)
@@ -75,17 +84,10 @@ void DownloadManager::dataFileRequest(QNetworkReply *finished, QString language)
     argList.append("-C");
     argList.append(dataDir);
 
-    QProcess process;
-    process.start("tar", argList, QIODevice::ReadOnly);
+    QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)),
+                     this, SLOT(extracted(int, QProcess::ExitStatus)));
 
-    if(!process.waitForFinished()) {
-        qDebug() << process.errorString();
-    }
+    process_->start("tar", argList, QIODevice::ReadOnly);
 
-    if(!QFile::remove(path)) {
-        qDebug() << "remove error";
-    }
-
-    emit extracted(language);
     finished->deleteLater();
 }

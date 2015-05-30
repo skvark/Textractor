@@ -80,6 +80,11 @@ void TesseractAPI::downloadLanguage(QString lang)
                      this, SIGNAL(progressStatus(qint64, qint64)));
 }
 
+void TesseractAPI::deleteLanguage(QString lang)
+{
+    return;
+}
+
 QString TesseractAPI::tesseractVersion()
 {
     static const char* version = api_->Version();

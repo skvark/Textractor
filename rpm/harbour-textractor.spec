@@ -56,12 +56,9 @@ rm -rf %{buildroot}
 # << install pre
 %qmake5_install
 mkdir %{buildroot}%{_datadir}/%{name}/lib/
-mkdir %{buildroot}%{_datadir}/%{name}/tessdata/
 cp -f /usr/lib/libtesseract.so.3 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/liblept.so.4 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libjpeg.so.62 %{buildroot}%{_datadir}/%{name}/lib/
-cp -f /usr/share/tessdata/eng.traineddata %{buildroot}%{_datadir}/%{name}/tessdata/
-cp -f /usr/share/tessdata/fin.traineddata %{buildroot}%{_datadir}/%{name}/tessdata/
 
 # >> install post
 # << install post

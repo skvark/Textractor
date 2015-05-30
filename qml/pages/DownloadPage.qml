@@ -3,14 +3,29 @@ import Sailfish.Silica 1.0
 
 Page {
 
-    id: mainPage
+    id: page
     property string language;
 
     Component.onCompleted: {
         tesseractAPI.downloadLanguage(language);
     }
 
+    Timer {
+        id: timer
+        interval: 50;
+        running: false;
+        repeat: false;
+        onTriggered: pageStack.pop();
+    }
+
     backNavigation: false;
+
+    BusyIndicator {
+        id: busyind
+        anchors.centerIn: page
+        size: BusyIndicatorSize.Large
+        running: false;
+    }
 
     SilicaFlickable {
         id: flickable
@@ -39,13 +54,6 @@ Page {
             label: "Downloading " + language + " ..."
         }
 
-        BusyIndicator {
-            id: busyind
-            anchors.centerIn: parent
-            size: BusyIndicatorSize.Large
-            running: false;
-        }
-
     }
 
     Connections {
@@ -55,7 +63,7 @@ Page {
             busyind.running = false;
             backNavigation: true;
             tesseractAPI.settings.setLanguage(language);
-            pageStack.pop();
+            timer.start();
         }
 
         onLanguageExtracting: {

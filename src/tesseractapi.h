@@ -23,11 +23,15 @@ public:
 
     // Does the whole analyzing process
     Q_INVOKABLE void analyze(QString imagepath, int rotation);
+
     Q_INVOKABLE void resetSettings();
     Q_INVOKABLE bool isLangDownloaded(QString lang);
     Q_INVOKABLE void downloadLanguage(QString lang);
+    Q_INVOKABLE void deleteLanguage(QString lang);
+
     Q_INVOKABLE QString tesseractVersion();
     Q_INVOKABLE QString leptonicaVersion();
+
     SettingsManager *settings() const;
 
 signals:
