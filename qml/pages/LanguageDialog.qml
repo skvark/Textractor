@@ -10,7 +10,6 @@ Dialog {
     Component.onCompleted: {
         listView.model = tesseractAPI.settings.getLanguageList();
         listView.currentIndex = tesseractAPI.settings.getLangIndex();
-        listView.positionViewAtIndex();
     }
 
     onAccepted: {
@@ -58,6 +57,7 @@ Dialog {
         anchors.topMargin: Theme.paddingMedium * 4
         height: parent.height - header.childrenRect.height - infolabel.height - Theme.paddingMedium * 4
         width: parent.width
+
 
         delegate: ListItem {
 
@@ -119,7 +119,6 @@ Dialog {
             listView.model = [];
             listView.model = tesseractAPI.settings.getLanguageList();
             listView.currentIndex = lastIndex;
-            listView.positionViewAtIndex();
         }
     }
 }
