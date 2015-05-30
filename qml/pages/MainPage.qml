@@ -68,5 +68,78 @@ Page {
                 })
             }
         }
+
+
+        BackgroundItem {
+            id: button1
+            anchors.top: lang.bottom
+            anchors.topMargin: 25;
+            anchors.left: parent.left
+            width: parent.width - 4 * Theme.paddingMedium
+            anchors.leftMargin: 2 * Theme.paddingMedium
+            height: 300
+
+            Image {
+                anchors.fill: parent
+                fillMode: Image.Pad
+                horizontalAlignment: Image.AlignHCenter
+                verticalAlignment: Image.AlignVCenter
+                source: "image://theme/graphics-cover-camera"
+            }
+
+            Label {
+                anchors.topMargin: 20;
+                anchors.top: parent.top
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                text: "Take a picture"
+            }
+
+            onClicked: {
+                pageStack.push("CameraPage.qml")
+            }
+        }
+
+        BackgroundItem {
+            id: button2
+            anchors.top: button1.bottom
+            anchors.left: parent.left
+            anchors.topMargin: 25;
+            width: parent.width - 4 * Theme.paddingMedium
+            anchors.leftMargin: 2 * Theme.paddingMedium
+            height: 300
+
+            Image {
+                anchors.fill: parent
+                fillMode: Image.Pad
+                horizontalAlignment: Image.AlignHCenter
+                verticalAlignment: Image.AlignVCenter
+                source: "image://theme/icon-l-image"
+            }
+
+            Label {
+                anchors.topMargin: 20;
+                anchors.top: parent.top
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                text: "Select an image from the gallery"
+            }
+
+            onClicked: {
+
+            }
+        }
+
+        Rectangle {
+            anchors.fill: button1
+            radius: 10;
+            color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+        }
+
+        Rectangle {
+            anchors.fill: button2
+            radius: 10;
+            color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+        }
     }
 }

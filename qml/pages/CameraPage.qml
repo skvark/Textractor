@@ -12,11 +12,8 @@ Page {
 
         Item {
             id: cameraOutput
-            x: 0
-            y: 0
-            anchors.fill: parent
-            width: 540
-            height: 960
+            width: page.width
+            height: page.height
 
             Camera {
                 id: camera
@@ -45,7 +42,7 @@ Page {
                width: page.width
                height: page.height
                anchors.fill: parent
-               fillMode: VideoOutput.PreserveAspectFit
+               fillMode: VideoOutput.PreserveAspectCrop
            }
         }
 
