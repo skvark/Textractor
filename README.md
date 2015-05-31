@@ -1,17 +1,16 @@
 Text Extractor
 ==============
 
-Work in progress.
-
-Some notes:
-- ensure that there's good lighting conditions when taking pictures
-- check that there are no shadows or complex textures in the background
-- works best with black text and light colored backgrounds
+Work in progress. However, most of the core functionality is implemented.
 
 Environment and building
 ------------------------
 
 To be able to build this, follow this Gist to setup the environment correctly: https://gist.github.com/skvark/49a2f1904192b6db311a
+
+In short:
+
+Add my repositories containing Tesseract OCR and Leptonica to the build machine targets.
 
 Preprocessing
 -------------
@@ -33,7 +32,10 @@ Postprocessing
 
 The results are filtered based on the word confindence value. Confidence value is a number between 0-100. 0 means that Tesseract wasn't really sure about the detected word and 100 means that Tesseract is sure that the word is what it is.
 
-Currently there's hardcoded limit of 20 for the confidence. Words with confidence value less than that are removed from the results.
+Settings
+--------
+
+I will make some kind of informative page which explains the parameters at some point.
 
 Test image and result
 ---------------------
