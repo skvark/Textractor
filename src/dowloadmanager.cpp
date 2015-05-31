@@ -44,6 +44,9 @@ void DownloadManager::finished(QNetworkReply *reply)
 void DownloadManager::extracted(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if(exitStatus == QProcess::NormalExit) {
+        QString dataDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+        QString path = dataDir + "/" + fileName + language_ + fileType;
+        QFile::remove(path);
         emit extracted(language_);
     }
 }

@@ -9,7 +9,7 @@ Page {
     SilicaFlickable {
         id: settingsflickable
         anchors.fill: parent
-        contentHeight: 400 + advanced.height
+        contentHeight: label2.height + advanced.height + headerContainer.height + 100
 
         PullDownMenu {
             id: menu
@@ -33,36 +33,32 @@ Page {
         Column {
             id: headerContainer
             width: settingsPage.width
+            height: childrenRect.height
 
             PageHeader {
                 title: qsTr("Settings")
             }
         }
 
-        SectionHeader {
-            id: advancedsection
-            text: qsTr("Advanced Settings")
-            font.pixelSize: Theme.fontSizeMedium
+        Label {
+            id: label2
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.top: headerContainer.bottom
-            anchors.topMargin: 10
-            height: 40;
-
-            Label {
-                id: label2
-                font.pixelSize: 22
-                anchors.right: advancedsection.right
-                anchors.top: advancedsection.bottom
-                textFormat: Text.RichText
-                text: "Modifying these might yeild better results."
-                color: Theme.secondaryColor
-            }
-
+            anchors.leftMargin: Theme.paddingMedium;
+            anchors.rightMargin: Theme.paddingMedium;
+            height: 80
+            wrapMode: Text.Wrap
+            font.pixelSize: Theme.fontSizeSmall
+            textFormat: Text.RichText
+            text: "Modifying these might yeild better results. See www.tobedecided.com for more detailed explanations."
+            color: Theme.secondaryColor
         }
 
         Column {
 
             id: advanced
-            anchors.top: advancedsection.bottom
+            anchors.top: label2.bottom
             width: settingsPage.width
             anchors.topMargin: 30
             height: childrenRect.height

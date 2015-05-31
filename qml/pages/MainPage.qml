@@ -78,6 +78,7 @@ Page {
             width: parent.width - 4 * Theme.paddingMedium
             anchors.leftMargin: 2 * Theme.paddingMedium
             height: 300
+            z: -1
 
             Image {
                 anchors.fill: parent
@@ -85,6 +86,7 @@ Page {
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source: "image://theme/graphics-cover-camera"
+                z: 30
             }
 
             Label {
@@ -108,6 +110,7 @@ Page {
             width: parent.width - 4 * Theme.paddingMedium
             anchors.leftMargin: 2 * Theme.paddingMedium
             height: 300
+            z: -1
 
             Image {
                 anchors.fill: parent
@@ -115,6 +118,7 @@ Page {
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source: "image://theme/icon-l-image"
+                z: 30
             }
 
             Label {
