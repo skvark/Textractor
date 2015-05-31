@@ -28,7 +28,8 @@ SOURCES += \
     src/imageprocessor.cpp \
     src/harbour-textractor.cpp \
     src/settings.cpp \
-    src/dowloadmanager.cpp
+    src/dowloadmanager.cpp \
+    src/cameramodecontrol.cpp
 
 OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
@@ -56,5 +57,6 @@ HEADERS += \
     src/tesseractapi.h \
     src/imageprocessor.h \
     src/settings.h \
-    src/dowloadmanager.h
+    src/dowloadmanager.h \
+    src/cameramodecontrol.h
 

@@ -13,6 +13,7 @@
 #include <locale.h>
 #include <settings.h>
 #include <QtQml>
+#include <cameramodecontrol.h>
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,7 @@ int main(int argc, char *argv[])
     TesseractAPI interface;
     view->rootContext()->setContextProperty("tesseractAPI", &interface);
     qmlRegisterType<SettingsManager>("harbour.textractor.settingsmanager", 1, 0, "SettingsManager");
+    qmlRegisterType<CameraModeControl>("harbour.textractor.cameramodecontrol", 1, 0, "CameraModeControl");
 
     view->setSource(SailfishApp::pathTo("qml/harbour-textractor.qml"));
     view->showFullScreen();
