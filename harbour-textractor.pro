@@ -23,6 +23,8 @@ LIBS += -ltesseract -llept
 
 QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
 SOURCES += \
     src/tesseractapi.cpp \
     src/imageprocessor.cpp \
@@ -35,7 +37,6 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
     translations/*.ts \
     rpm/harbour-textractor.spec \
-    rpm/harbour-textractor.yaml \
     rpm/harbour-textractor.changes.in \
     harbour-textractor.desktop \
     README.md \
@@ -47,7 +48,9 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/CameraPage.qml \
     qml/pages/ResultsPage.qml \
     qml/pages/MainPage.qml \
-    qml/pages/DownloadPage.qml
+    qml/pages/DownloadPage.qml \
+    qml/pages/About.qml \
+    rpm/harbour-textractor.yaml
 
 # to disable building translations every time, comment out the
 # following CONFIG line

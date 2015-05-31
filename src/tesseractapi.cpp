@@ -93,9 +93,7 @@ QString TesseractAPI::tesseractVersion()
 
 QString TesseractAPI::leptonicaVersion()
 {
-    char* leptVersion = getLeptonicaVersion();
-    QString version(QByteArray::fromRawData(leptVersion, sizeof(version)));
-    delete [] leptVersion;
+    QString version(QString::number(LIBLEPT_MAJOR_VERSION) + "." + QString::number(LIBLEPT_MINOR_VERSION));
     return version;
 }
 
