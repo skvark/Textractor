@@ -42,7 +42,7 @@ Page {
             text: "To get the best results you should follow a couple of simple guidelines when taking pictures:" +
                   "<ul>" +
                   "<li>Check that the lightning conditions are good. There should be no visible shadows or reflections in the image.</li>" +
-                  "<li>Check that the color of the background is light and there are no complex textures in it.</li>" +
+                  "<li>Check that the color of the background is light and there are no complex textures in it. The background can be also dark: just make sure the text is white or some other light color.</li>" +
                   "<ul>";
         }
 
