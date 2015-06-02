@@ -106,7 +106,7 @@ QString run(QString imagepath,
     pixs = pixRead(path);
 
     if(!pixs) {
-        return QString("Error");
+        return QString("An error occured. Image could not be read.");
     }
 
     info.first = QString("Preprocessing the image...");
@@ -114,6 +114,12 @@ QString run(QString imagepath,
                       settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),
                       settings->getSmoothingFactor(), settings->getSmoothingFactor(),
                       settings->getScoreFract());
+
+    if(!pixs) {
+        pixDestroy(&pixs);
+        return QString("An error occured. Image could not be preprocessed.");
+    }
+
 
     writeToDisk(pixs);
 
