@@ -57,7 +57,7 @@ Dialog {
                 if(!firstuse) {
                     return "Tap language to download and install.";
                 } else {
-                    return "Looks like you are using Tectractor for the first time. Please select and download language to get going."
+                    return "Looks like you are using Textractor for the first time. Please select and download language to get going."
                 }
             }
 
