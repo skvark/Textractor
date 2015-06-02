@@ -24,7 +24,7 @@ TesseractAPI::TesseractAPI(QObject *parent) :
 
     if (settingsManager_->getLanguageCode().length() == 0) {
         settingsManager_->resetToDefaults();
-        emit firstUse();
+        QTimer::singleShot(200, this, SIGNAL(firstUse()));
     }
 }
 

@@ -130,7 +130,11 @@ Page {
             }
 
             onClicked: {
-
+                var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
+                imagePicker.selectedContentChanged.connect(function() {
+                    tesseractAPI.analyze(String(imagePicker.selectedContent).replace("file://", ""), 0);
+                    pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
+                });
             }
         }
 
@@ -144,6 +148,19 @@ Page {
             anchors.fill: button2
             radius: 10;
             color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+        }
+
+    }
+
+    Connections {
+        target: tesseractAPI
+
+        onFirstUse: {
+            console.log("kissa");
+            var dialog = pageStack.push("LanguageDialog.qml", {firstuse: true});
+            dialog.accepted.connect(function() {
+                lang.value = tesseractAPI.settings.getLanguage();
+            });
         }
     }
 }

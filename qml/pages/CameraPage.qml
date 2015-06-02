@@ -99,7 +99,7 @@ Page {
         focus.focusMode: Camera.FocusContinuous
         focus.focusPointMode: Camera.FocusPointAuto
 
-        flash.mode: Camera.FlashAuto
+        flash.mode: Camera.FlashOff
 
         imageCapture {
             resolution: "primary" == cameraModeControl.device
@@ -139,7 +139,7 @@ Page {
             case 4:
                 return 0
             default:
-                return -1
+                return 0
             }
         }
     }

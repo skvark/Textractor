@@ -105,6 +105,10 @@ QString run(QString imagepath,
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
 
+    if(!pixs) {
+        return QString("Error");
+    }
+
     info.first = QString("Preprocessing the image...");
     pixs = preprocess(pixs, settings->getTileSize(), settings->getTileSize(),
                       settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),

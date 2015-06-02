@@ -5,11 +5,15 @@ import harbour.textractor.settingsmanager 1.0
 Dialog {
 
     id: languageDialog
-    backNavigation: tesseractAPI.settings.getLanguage().length !== 0
+    property bool firstuse: false;
 
     Component.onCompleted: {
         listView.model = tesseractAPI.settings.getLanguageList();
         listView.currentIndex = tesseractAPI.settings.getLangIndex();
+        if(firstuse) {
+            info.height = 100;
+            listView.topMargin = Theme.paddingMedium * 4
+        }
     }
 
     onAccepted: {
@@ -21,6 +25,9 @@ Dialog {
        acceptText: "Select"
        cancelText: "Cancel"
     }
+
+    backNavigation: tesseractAPI.settings.getLanguage().length !== 0
+    forwardNavigation: current.length !== 0
 
     onStatusChanged: {
         if(status === PageStatus.Active && selectCompleted) {
@@ -37,14 +44,23 @@ Dialog {
         height: childrenRect.height
 
         Label {
+            id: info
             anchors.left: parent.left
             anchors.leftMargin: Theme.paddingLarge
-            width: parent.width
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.paddingLarge
             height: 70
             wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.primaryColor
-            text: "Tap language to download and install."
+            text: {
+                if(!firstuse) {
+                    return "Tap language to download and install.";
+                } else {
+                    return "Looks like you are using Tectractor for the first time. Please select and download language to get going."
+                }
+            }
+
             z: 20
         }
 
