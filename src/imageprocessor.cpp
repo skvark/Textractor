@@ -22,6 +22,23 @@ Pix* preprocess(Pix *image, int sX, int sY,
     image1 = pixConvertRGBToGrayFast(image);
     image2 = pixUnsharpMaskingGray(image1, 5, 2.5);
 
+    // pixOtsuThreshOnBackgroundNorm won't work if the internal pixGetBackgroundGrayMap
+    // makes the map smaller than 5x5 (line 824 in adaptmap.c: (w + sx - 1) / sx) )
+    l_float32 scaling_factor = 0;
+    float width = (image2->w + sX - 1) / sX;
+    float height = (image2->h + sY - 1) / sY;
+
+    if(width < 5 || height < 5) {
+
+        if (width < height) {
+            scaling_factor = 5.1 / width;
+        } else {
+            scaling_factor = 5.1 / height;
+        }
+        image2 = pixScaleGrayLI(image2, scaling_factor, scaling_factor);
+
+    }
+
     l_int32 pthresh;
     image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY,
                                            threshold, mincount, bgval,
