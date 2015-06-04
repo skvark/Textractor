@@ -113,8 +113,15 @@ QString run(QString imagepath,
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
-    QTransform transform;
-    img = img.transformed(transform.rotate(info.second));
+
+    if(info.second != 0) {
+        QTransform transform;
+        img = img.transformed(transform.rotate(info.second));
+    }
+
+    imagepath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+                QString("/textractor_copy.jpg");
+
     // if scaled up, the image will take a lot of space and OCR becomes really slow
     //img = img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
     img.save(imagepath, "jpg", 100);
