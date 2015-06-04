@@ -8,7 +8,6 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     QObject(parent)
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-
     timer_ = new QTimer(this);
     monitor_ = new ETEXT_DESC();
     settingsManager_ = new SettingsManager();
@@ -27,6 +26,7 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     }
 
     info_ = Info();
+    cancel_ = false;
 
 }
 
@@ -51,21 +51,27 @@ void TesseractAPI::analyze(QString imagepath, int rotation, bool gallery)
     watcher_ = new QFutureWatcher<QString>();
     connect(watcher_, SIGNAL(finished()), this, SLOT(handleAnalyzed()));
 
-    // Since the QtConcurrent::run creates internal copies of the parameters
-    // the status parameter is passed as wrapped reference using std::ref().
-    // Note that std::ref is a C++11 feature.
-
     monitor_->progress = 0;
+    monitor_->cancel = (CANCEL_FUNC)&TesseractAPI::cancelCallback;
+    monitor_->cancel_this = this;
     info_.status = QString("Initializing...");
     info_.rotation = rotation;
     info_.gallery = gallery;
 
+    // Since the QtConcurrent::run creates internal copies of the parameters
+    // the status parameter is passed as wrapped reference using std::ref().
+    // Note that std::ref is a C++11 feature.
     QFuture<QString> future = QtConcurrent::run(run, imagepath, monitor_, api_, settingsManager_, std::ref(info_));
     watcher_->setFuture(future);
 
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
     timer_->start(500);
+}
+
+void TesseractAPI::cancel()
+{
+    cancel_ = true;
 }
 
 void TesseractAPI::resetSettings()
@@ -106,6 +112,16 @@ QString TesseractAPI::leptonicaVersion()
 SettingsManager *TesseractAPI::settings() const
 {
     return settingsManager_;
+}
+
+bool TesseractAPI::isCancel()
+{
+    if(cancel_) {
+        cancel_ = false;
+    } else {
+        return false;
+    }
+    return true;
 }
 
 void TesseractAPI::handleAnalyzed()

@@ -13,6 +13,7 @@
 #include <dowloadmanager.h>
 #include "imageprocessor.h"
 
+
 class TesseractAPI : public QObject
 {
     Q_OBJECT
@@ -24,6 +25,7 @@ public:
 
     // Does the whole analyzing process
     Q_INVOKABLE void analyze(QString imagepath, int rotation, bool gallery);
+    Q_INVOKABLE void cancel();
 
     Q_INVOKABLE void resetSettings();
     Q_INVOKABLE bool isLangDownloaded(QString lang);
@@ -34,6 +36,14 @@ public:
     Q_INVOKABLE QString leptonicaVersion();
 
     SettingsManager *settings() const;
+
+    bool isCancel();
+
+    static bool cancelCallback(void *cancel_this, int words) {
+        TesseractAPI* api = static_cast<TesseractAPI*>(cancel_this);
+        return api->isCancel();
+    }
+
 
 signals:
     // Emitted when the OCR is done,
@@ -67,6 +77,7 @@ private:
     DownloadManager *downloadManager_;
 
     Info info_;
+    bool cancel_;
 
 };
 

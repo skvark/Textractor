@@ -45,6 +45,15 @@ Page {
             text: ""
         }
 
+        Button {
+            text: "Cancel"
+            onClicked: tesseractAPI.cancel();
+            visible: loading
+            anchors.bottom: parent.bottom;
+            anchors.bottomMargin: 50;
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
         PullDownMenu {
             MenuItem {
                 text: qsTr("Copy Text to Clipboard");
