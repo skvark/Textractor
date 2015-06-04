@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QStringList>
 #include <QTransform>
+#include <QFile>
 
 Pix* preprocess(Pix *image, int sX, int sY,
                 int threshold, int mincount,
@@ -105,45 +106,50 @@ QString run(QString imagepath,
             ETEXT_DESC* monitor,
             tesseract::TessBaseAPI* api,
             SettingsManager *settings,
-            QPair<QString, int> &info) {
+            Info &info) {
 
-    info.first = QString("Initializing...");
+    info.status = QString("Initializing...");
     Pix *pixs;
 
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
 
-    if(info.second != 0) {
+    if(info.rotation != 0) {
         QTransform transform;
-        img = img.transformed(transform.rotate(info.second));
+        img = img.transformed(transform.rotate(info.rotation));
     }
 
-    imagepath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
-                QString("/textractor_copy.jpg");
+    if(info.gallery) {
+        imagepath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+                    QString("/textractor_copy.jpg");
+    }
 
-    // if scaled up, the image will take a lot of space and OCR becomes really slow
-    //img = img.scaled(img.width() / 2, img.height() / 2, Qt::KeepAspectRatio);
     img.save(imagepath, "jpg", 100);
 
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);
 
+    if(info.gallery) {
+        QFile::remove(imagepath);
+    }
+
     if(!pixs) {
         return QString("An error occured. Image could not be read.");
     }
 
-    info.first = QString("Preprocessing the image...");
+    info.status = QString("Preprocessing the image...");
     pixs = preprocess(pixs, settings->getTileSize(), settings->getTileSize(),
                       settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),
                       settings->getSmoothingFactor(), settings->getSmoothingFactor(),
                       settings->getScoreFract());
 
+
+
     if(!pixs) {
         pixDestroy(&pixs);
         return QString("An error occured. Image could not be preprocessed.");
     }
-
 
     writeToDisk(pixs);
 
@@ -156,11 +162,11 @@ QString run(QString imagepath,
     api->SetSourceResolution(300);
 
     char *outText;
-    info.first = QString("Running OCR...");
+    info.status = QString("Running OCR...");
     api->Recognize(monitor);
     outText = api->GetUTF8Text();
 
-    info.first = QString("Postprocessing...");
+    info.status = QString("Postprocessing...");
     pixDestroy(&pixs);
 
     QString text = clean(outText, api);

@@ -110,7 +110,7 @@ Page {
             }
 
             onImageSaved: {
-                tesseractAPI.analyze(path, picRotation);
+                tesseractAPI.analyze(path, picRotation, false);
                 pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
             }
         }

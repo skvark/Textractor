@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <settings.h>
 #include <dowloadmanager.h>
+#include "imageprocessor.h"
 
 class TesseractAPI : public QObject
 {
@@ -22,7 +23,7 @@ public:
     ~TesseractAPI();
 
     // Does the whole analyzing process
-    Q_INVOKABLE void analyze(QString imagepath, int rotation);
+    Q_INVOKABLE void analyze(QString imagepath, int rotation, bool gallery);
 
     Q_INVOKABLE void resetSettings();
     Q_INVOKABLE bool isLangDownloaded(QString lang);
@@ -56,15 +57,16 @@ public slots:
 
 private:
 
-tesseract::TessBaseAPI* api_;
-QFutureWatcher<QString> *watcher_;
-QPair<QString, int> info_;
-QTimer *timer_;
+    tesseract::TessBaseAPI* api_;
+    QFutureWatcher<QString> *watcher_;
+    QTimer *timer_;
 
-ETEXT_DESC *monitor_;
+    ETEXT_DESC *monitor_;
 
-SettingsManager *settingsManager_;
-DownloadManager *downloadManager_;
+    SettingsManager *settingsManager_;
+    DownloadManager *downloadManager_;
+
+    Info info_;
 
 };
 

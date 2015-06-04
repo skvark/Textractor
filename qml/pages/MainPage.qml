@@ -132,7 +132,7 @@ Page {
             onClicked: {
                 var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
                 imagePicker.selectedContentChanged.connect(function() {
-                    tesseractAPI.analyze(String(imagePicker.selectedContent).replace("file://", ""), 0);
+                    tesseractAPI.analyze(String(imagePicker.selectedContent).replace("file://", ""), 0, true);
                     pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
                 });
             }

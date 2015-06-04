@@ -6,6 +6,12 @@
 #include <settings.h>
 #include <QPair>
 
+struct Info {
+    int rotation;
+    QString status;
+    bool gallery;
+};
+
 Pix* preprocess(Pix *image, int sX, int sY,
                 int threshold, int mincount,
                 int bgval, int smoothX,
@@ -19,6 +25,6 @@ QString run(QString imagepath,
             ETEXT_DESC *monitor,
             tesseract::TessBaseAPI* api,
             SettingsManager *settings,
-            QPair<QString, int> &info);
+            Info &info);
 
 #endif // IMAGEPROCESSOR_H
