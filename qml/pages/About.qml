@@ -33,7 +33,7 @@ Page {
                       "<style>a:link { color: " + Theme.highlightColor + "; }</style>" +
 
                       "<span class=\"legend\">Created by</span><br />Olli-Pekka Heinisuo<br /><br />" +
-                      "<span class=\"legend\">Icon and cover image by</span><br />Nönnön Nöö<br /><br />" +
+                      "<span class=\"legend\">Icon and cover image by</span><br />Janne Peltonen<br /><br />" +
 
                       "<font style=\"font-size: 25px;\">Textractor is an OCR (optical character recognition) application.<br /><br />" +
                       "Textractor uses <a href='https://code.google.com/p/tesseract-ocr/'>Tesseract OCR</a> engine to perform actual OCR and " +
