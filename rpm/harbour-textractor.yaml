@@ -1,13 +1,13 @@
 Name: harbour-textractor
 Summary: Optical character recognition application.
-Version: 0.2
+Version: 0.3
 QMakeOptions:
 - VERSION='%{version}-%{release}'
-Release: 1
+Release: 0
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
-URL: https://github.com/skvark/Textractor
+URL: http://skvark.github.io/Textractor/
 License: MIT
 # This must be generated before uploading a package to a remote build service.
 # Usually this line does not need to be modified.

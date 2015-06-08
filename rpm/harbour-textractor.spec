@@ -15,11 +15,11 @@ Name:       harbour-textractor
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Optical character recognition application.
-Version:    0.2
-Release:    1
+Version:    0.3
+Release:    0
 Group:      Qt/Qt
 License:    MIT
-URL:        https://github.com/skvark/Textractor
+URL:        http://skvark.github.io/Textractor/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-textractor.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
@@ -54,7 +54,6 @@ Textractor is and OCR application made with Tesseract OCR and Leptonica.
 %install
 rm -rf %{buildroot}
 # >> install pre
-rm -rf %{buildroot}
 # << install pre
 %qmake5_install
 
@@ -70,12 +69,13 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 %files
+# >> files
 %defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
+%attr(0755,-,-) %{_bindir}/%{name}
+# << files
 %{_bindir}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 %{_datadir}/harbour-textractor/lib/*
-# >> files
-%{_datadir}/%{name}/lib/*
-# << files

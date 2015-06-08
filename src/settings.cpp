@@ -136,7 +136,8 @@ float SettingsManager::getConfidence()
 
 bool SettingsManager::isLangDataAvailable(QString lang)
 {
-    QDir tessdata = QDir("/home/nemo/.local/share/harbour-textractor/harbour-textractor/tesseract-ocr/tessdata/");
+    QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QDir tessdata = QDir(datadir + "/tesseract-ocr/tessdata/");
     QStringList data = tessdata.entryList();
     return data.contains(languages.key(lang) + QString(".traineddata"));
 }
