@@ -39,7 +39,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder2
-            anchors.verticalCenterOffset: 300
+            anchors.verticalCenterOffset: 280
             anchors.centerIn: parent
             enabled: loading
             text: ""

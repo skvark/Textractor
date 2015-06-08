@@ -27,6 +27,7 @@ void SettingsManager::resetToDefaults()
     setScoreFract(0.09);
     setSmoothingFactor(0);
     setThreshold(100);
+    setConfidence(20);
     settings_->sync();
 }
 
@@ -121,6 +122,16 @@ void SettingsManager::setScoreFract(float scorefract)
 float SettingsManager::getScoreFract()
 {
     return settings_->value("scorefract").toDouble();
+}
+
+void SettingsManager::setConfidence(int confidence)
+{
+    settings_->setValue("confidence", toQVariant(confidence));
+}
+
+float SettingsManager::getConfidence()
+{
+    return settings_->value("confidence").toDouble();
 }
 
 bool SettingsManager::isLangDataAvailable(QString lang)

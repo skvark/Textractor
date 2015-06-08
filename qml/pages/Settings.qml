@@ -9,7 +9,7 @@ Page {
     SilicaFlickable {
         id: settingsflickable
         anchors.fill: parent
-        contentHeight: label2.height + advanced.height + headerContainer.height + 100
+        contentHeight: label2.height + advanced.height + basicsection.height + basic.height + headerContainer.height + 100
 
         PullDownMenu {
             id: menu
@@ -40,18 +40,57 @@ Page {
             }
         }
 
+        SectionHeader {
+            id: basicsection
+            text: qsTr("Postprocessing")
+            font.pixelSize: Theme.fontSizeMedium
+            anchors.top: headerContainer.bottom
+            height: 20
+        }
+
+        Column {
+
+            id: basic
+            anchors.top: basicsection.bottom
+            width: settingsPage.width
+            anchors.topMargin: 10
+            height: childrenRect.height
+
+            Slider {
+                id: confidence
+                label: "Minimum word confidence value"
+                width: parent.width
+                stepSize: 1
+                minimumValue: 0
+                maximumValue: 100
+                value: tesseractAPI.settings.getConfidence();
+                valueText: value
+                onValueChanged: tesseractAPI.settings.setConfidence(value);
+            }
+        }
+
+        SectionHeader {
+            id: advancedsection
+            text: qsTr("Preprocessing")
+            font.pixelSize: Theme.fontSizeMedium
+            anchors.top: basic.bottom
+            height: 50;
+        }
+
         Label {
             id: label2
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: headerContainer.bottom
-            anchors.leftMargin: Theme.paddingMedium;
-            anchors.rightMargin: Theme.paddingMedium;
+            anchors.top: advancedsection.bottom
+            anchors.topMargin: 10
+            anchors.leftMargin: Theme.paddingMedium * 5;
+            anchors.rightMargin: Theme.paddingMedium * 5;
             height: 80
             wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
             textFormat: Text.RichText
-            text: "Modifying these might yeild better results. See www.tobedecided.com for more detailed explanations."
+            onLinkActivated: Qt.openUrlExternally(link)
+            text: "<style>a:link { color: " + Theme.highlightColor + "; }</style>Modifying these might yeild better results. See <a href='http://skvark.github.io/Textractor/'>documentation</a> for more information."
             color: Theme.secondaryColor
         }
 
@@ -60,12 +99,12 @@ Page {
             id: advanced
             anchors.top: label2.bottom
             width: settingsPage.width
-            anchors.topMargin: 30
+            anchors.topMargin: 25
             height: childrenRect.height
 
             Slider {
                 id: tilesize
-                label: "Tile size in pixels."
+                label: "Tile size in pixels"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 1
@@ -78,7 +117,7 @@ Page {
 
             Slider {
                 id: threshold
-                label: "Threshold for determining foreground."
+                label: "Threshold for determining foreground"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 1
@@ -91,7 +130,7 @@ Page {
 
             Slider {
                 id: mincount
-                label: "Min threshold on counts in a tile."
+                label: "Min threshold on counts in a tile"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 1
@@ -105,7 +144,7 @@ Page {
 
             Slider {
                 id: bgval
-                label: "Target bg value for the normalized image."
+                label: "Target bg value for the normalized image"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 1
@@ -119,7 +158,7 @@ Page {
 
             Slider {
                 id: smoothing
-                label: "Smoothing factor."
+                label: "Smoothing factor"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 1
@@ -133,7 +172,7 @@ Page {
 
             Slider {
                 id: scorefract
-                label: "Otsu score fraction."
+                label: "Otsu score fraction"
                 width: parent.width
                 anchors.topMargin: 20
                 stepSize: 0.01
@@ -157,6 +196,7 @@ Page {
             mincount.value = tesseractAPI.settings.getMinCount();
             threshold.value = tesseractAPI.settings.getThreshold();
             tilesize.value = tesseractAPI.settings.getTileSize();
+            confidence.value = tesseractAPI.settings.getConfidence();
         }
     }
 

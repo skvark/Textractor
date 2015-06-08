@@ -19,7 +19,7 @@ Pix* preprocess(Pix *image, int sX, int sY,
 
 void writeToDisk(Pix *img);
 
-QString clean(char* outText, tesseract::TessBaseAPI *api);
+QString clean(char* outText, tesseract::TessBaseAPI *api, int confidence);
 
 QString run(QString imagepath,
             ETEXT_DESC *monitor,

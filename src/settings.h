@@ -120,6 +120,9 @@ public:
     Q_INVOKABLE void setScoreFract(float scorefract);
     Q_INVOKABLE float getScoreFract();
 
+    Q_INVOKABLE void setConfidence(int confidence);
+    Q_INVOKABLE float getConfidence();
+
     Q_INVOKABLE bool isLangDataAvailable(QString lang);
 
 signals:

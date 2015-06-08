@@ -20,6 +20,11 @@ Pix* preprocess(Pix *image, int sX, int sY,
     Pix* image2;
     Pix* image3;
 
+    // If user selects previously preprocessed image (binarized aka 1 bpp), do nothing
+    if(image->d != 32) {
+        return image;
+    }
+
     image1 = pixConvertRGBToGrayFast(image);
     image2 = pixUnsharpMaskingGray(image1, 5, 2.5);
 
@@ -79,7 +84,7 @@ void writeToDisk(Pix *img) {
 
 }
 
-QString clean(char* outText, tesseract::TessBaseAPI *api) {
+QString clean(char* outText, tesseract::TessBaseAPI *api, int confidence) {
 
     QString text = QString::fromLocal8Bit(outText);
 
@@ -89,7 +94,7 @@ QString clean(char* outText, tesseract::TessBaseAPI *api) {
     int i = 0;
 
     while(i < results.size()) {
-        if(confidences[i] < 20) {
+        if(confidences[i] < confidence) {
             results.removeAt(i);
         }
         ++i;
@@ -169,7 +174,7 @@ QString run(QString imagepath,
     info.status = QString("Postprocessing...");
     pixDestroy(&pixs);
 
-    QString text = clean(outText, api);
+    QString text = clean(outText, api, settings->getConfidence());
     api->Clear();
     return text;
 }
