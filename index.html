@@ -38,14 +38,43 @@
 <h3>
 <a id="supported-image-formats" class="anchor" href="#supported-image-formats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported image formats</h3>
 
-<p>Textractor supports all the image formats which Sailfish OS supports. Images must have 32 bits per pixel. If image does not have 32 bits per pixels, preprocessing step is skipped and results may be poor. However, already preprocessed (Textractor outputs 1 bpp aka binarized image after the preprocessing step and saves it to the gallery) images will work fine. Preprocessed image is overwritten when new recognition is started.</p>
+<p>Textractor supports all the image formats which Sailfish OS supports. Images must have 32 bits per pixel. If image does not have 32 bits per pixels, preprocessing step is skipped and results may be poor. However, already preprocessed (Textractor outputs 1 bpp aka binarized image after the preprocessing step and saves it to the gallery) images will work fine. Preprocessed image is always overwritten when new recognition is started.</p>
 
 <h3>
 <a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
 
 <p>Textractor has some adjustable parameters which can improve the recognition results if adjusted correctly. The values are set as a default so that Textractor should work pretty good for most of the images. Most of the settings are rather advanced and I recommend to read instructions below if you want to adjust them. </p>
 
-<p>** to be done **</p>
+<h4>
+<a id="postprocessing" class="anchor" href="#postprocessing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Postprocessing</h4>
+
+<p><strong>Minimum word confidence:</strong> Textractor filters the results after recognition based on this value. Higher value means that word is probably correct. Value of 10-20 might help filtering some invalid results out.</p>
+
+<h4>
+<a id="preprocessing" class="anchor" href="#preprocessing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preprocessing</h4>
+
+<p>These settings control the background normalization and Otsu thresholding used in preprocessing. If you touch them, you can always return the default values from the pulley menu.</p>
+
+<p>Leptonica notes (other explnations are from Leptonica sources too):</p>
+
+<blockquote>
+<p>Otsu binarization attempts to split the image into two roughly equal sets of pixels, and it does a very poor job when there are large amounts of dark background.  By doing a background normalization first, to get the background near 255, we remove this problem. Then we use a modified Otsu to estimate the best global threshold on the normalized image.</p>
+</blockquote>
+
+<ul>
+<li>
+<strong>Tile size in pixels:</strong> The dimension of the pixel tile give the amount by which the map is reduced in size from the input image.</li>
+<li>
+<strong>Threshold for determining foreground:</strong> The threshold is used to binarize the input image, in order to locate the foreground components. If this is set too low, some actual foreground may be used to determine the maps; if set too high, there may not be enough background to determine the map values accurately. Typically, it's better to err by setting the threshold too high.</li>
+<li>
+<strong>Min threshold on counts in a tile:</strong> This is a minimum count of pixels in a tile for which a background reading is made, in order for that pixel in the map to be valid. This number should perhaps be at least 1/3 the size of the tile.</li>
+<li>
+<strong>Target bg value for the normalized image:</strong> A target background value for the normalized image.  This should be at least 128. If set too close to 255, some clipping will occur in the result.</li>
+<li>
+<strong>Smoothing factor:</strong> Input for smoothing the map. Each low-pass filter kernel dimension is 2 * (smoothing factor) + 1, so a value of 0 means no smoothing. A value of 1 or 2 is recommended.</li>
+<li>
+<strong>Otsu score fraction:</strong> The scorefract is the fraction of the maximum Otsu score, which is used to determine the range over which the histogram minimum is searched.</li>
+</ul>
 
 <h3>
 <a id="hints-for-better-results" class="anchor" href="#hints-for-better-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hints for better results</h3>
