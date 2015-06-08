@@ -19,15 +19,16 @@ int main(int argc, char *argv[])
 {
     // Tesseract requires this locale
     setlocale(LC_NUMERIC, "C");
-    // Set the tessdata directory prefix env variable
-    QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    qputenv("TESSDATA_PREFIX", QString(datadir + "/harbour-textractor/harbour-textractor/tesseract-ocr/tessdata/").toLocal8Bit());
 
     QCoreApplication::setApplicationName("harbour-textractor");
     QCoreApplication::setOrganizationName("harbour-textractor");
 
     QGuiApplication *app = SailfishApp::application(argc, argv);
     QQuickView *view = SailfishApp::createView();
+
+    // Set the tessdata directory prefix env variable
+    QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    qputenv("TESSDATA_PREFIX", QString(datadir + "/tesseract-ocr/tessdata/").toLocal8Bit());
 
     TesseractAPI interface;
     view->rootContext()->setContextProperty("tesseractAPI", &interface);
