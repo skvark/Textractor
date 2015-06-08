@@ -3,6 +3,11 @@ Text Extractor
 
 Work in progress. However, most of the core functionality is implemented.
 
+Documentation and Help
+----------------------
+
+[Textractor Documentation](http://skvark.github.io/Textractor/)
+
 Environment and building
 ------------------------
 
