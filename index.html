@@ -36,6 +36,11 @@
 <p><strong>Answer</strong>: It is recommended by Jolla and by common sense that developers don't ship massive amounts of data files with the application. In this case the application size would have been over 200 MB if all the language files were embedded to the .rpm package.</p>
 
 <h3>
+<a id="supported-image-formats" class="anchor" href="#supported-image-formats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported image formats</h3>
+
+<p>Textractor supports all the image formats which Sailfish OS supports. Images must have 32 bits per pixel. If image does not have 32 bits per pixels, preprocessing step is skipped and results may be poor. However, already preprocessed (Textractor outputs 1 bpp aka binarized image after the preprocessing step and saves it to the gallery) images will work fine. Preprocessed image is overwritten when new recognition is started.</p>
+
+<h3>
 <a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
 
 <p>Textractor has some adjustable parameters which can improve the recognition results if adjusted correctly. The values are set as a default so that Textractor should work pretty good for most of the images. Most of the settings are rather advanced and I recommend to read instructions below if you want to adjust them. </p>
