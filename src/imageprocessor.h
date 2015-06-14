@@ -5,6 +5,7 @@
 #include <QString>
 #include <settings.h>
 #include <QPair>
+#include <QImage>
 
 struct Info {
     int rotation;
@@ -18,6 +19,10 @@ Pix* preprocess(Pix *image, int sX, int sY,
                 int smoothY, float scoreFract);
 
 void writeToDisk(Pix *img);
+
+int getOrientation(char *imgPath);
+
+QImage rotateByExif(int orientation, QImage img);
 
 QString clean(char* outText, tesseract::TessBaseAPI *api, int confidence);
 

@@ -5,10 +5,10 @@
 #include <QDebug>
 #include <QStandardPaths>
 #include <QImageWriter>
-#include <QImage>
 #include <QStringList>
 #include <QTransform>
 #include <QFile>
+#include <libexif/exif-data.h>
 
 Pix* preprocess(Pix *image, int sX, int sY,
                 int threshold, int mincount,
@@ -107,6 +107,78 @@ QString clean(char* outText, tesseract::TessBaseAPI *api, int confidence) {
     return text;
 }
 
+int getOrientation(char* imgPath)
+{
+    int orientation = 0;
+    ExifData *exifData = exif_data_new_from_file(imgPath);
+
+    if (exifData) {
+
+        ExifByteOrder byteOrder = exif_data_get_byte_order(exifData);
+        ExifEntry *exifEntry = exif_data_get_entry(exifData, EXIF_TAG_ORIENTATION);
+
+        if (exifEntry) {
+          orientation = exif_get_short(exifEntry->data, byteOrder);
+        }
+
+    exif_data_free(exifData);
+    }
+
+    return orientation;
+}
+
+
+QImage rotateByExif(int orientation, QImage img)
+{
+    QTransform transform;
+    qDebug() << orientation;
+
+    // Codes: http://www.impulseadventure.com/photo/exif-orientation.html
+    // OK means that the rotation works correctly with images taken with Jolla's camera app
+    // No comment means that the rotation is not tested
+
+    switch(orientation) {
+        case 1:
+            break;                                        // OK
+
+        case 2:
+            img = img.mirrored(false, true);
+            break;
+
+        case 3:
+            img = img.transformed(transform.rotate(180)); // OK
+            break;
+
+        case 4:
+            img = img.mirrored(true, false);
+            break;
+
+        case 5:
+            img = img.transformed(transform.rotate(90));
+            img = img.mirrored(true, false);
+            break;
+
+        case 6:
+            img = img.transformed(transform.rotate(90));  // OK
+            break;
+
+        case 7:
+            img = img.transformed(transform.rotate(90));
+            img = img.mirrored(false, true);
+            break;
+
+        case 8:
+            // Jolla's camera app reports this orientation incorrectly
+            // (as 1) so images taken upside down won't rotate correctly
+            img = img.transformed(transform.rotate(90));
+            break;
+
+        default:
+            break;
+    }
+    return img;
+}
+
 QString run(QString imagepath,
             ETEXT_DESC* monitor,
             tesseract::TessBaseAPI* api,
@@ -120,12 +192,19 @@ QString run(QString imagepath,
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
     img.setDotsPerMeterY(11811.025);
 
-    if(info.rotation != 0) {
+    if(info.rotation != 0 && !info.gallery) {
         QTransform transform;
         img = img.transformed(transform.rotate(info.rotation));
     }
 
     if(info.gallery) {
+
+        int orientation = getOrientation(imagepath.toLocal8Bit().data());
+
+        if (orientation != 0) {
+            img = rotateByExif(orientation, img);
+        }
+
         imagepath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
                     QString("/textractor_copy.jpg");
     }
