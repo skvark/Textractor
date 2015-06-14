@@ -7,7 +7,7 @@ Name:       harbour-textractor
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libtesseract|libjpeg|libc\\.so\\.6\\(GLIBC_2\\.11\\)|liblept.*$
+%define __requires_exclude ^libtesseract|libjpeg|libexif\\.so\\.12|libc\\.so\\.6\\(GLIBC_2\\.11\\)|liblept.*$
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
@@ -62,7 +62,7 @@ mkdir %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libtesseract.so.3 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/liblept.so.4 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libjpeg.so.62 %{buildroot}%{_datadir}/%{name}/lib/
-cp -f /usr/lib/libexif.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libexif.so.12 %{buildroot}%{_datadir}/%{name}/lib/
 # << install post
 
 desktop-file-install --delete-original       \
@@ -70,13 +70,12 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 %files
-%defattr(-,root,root,-)
+# >> files
+%defattr(0644,root,root,0755)
+%attr(0755,-,-) %{_bindir}/%{name}
+# << files
 %{_bindir}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 %{_datadir}/harbour-textractor/lib/*
-# >> files
-%defattr(0644,root,root,0755)
-%attr(0755,-,-) %{_bindir}/%{name}
-# << files
