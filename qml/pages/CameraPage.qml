@@ -21,6 +21,12 @@ Page {
         }
     }
 
+    onStatusChanged: {
+        if (status === PageStatus.Activating && internal.complete) {
+            camera.cameraState = Camera.ActiveState;
+        }
+    }
+
     QtObject {
         id: internal
 
@@ -88,6 +94,10 @@ Page {
         }
     }
 
+    onPageContainerChanged: {
+
+    }
+
     Camera {
         id: camera
 
@@ -110,6 +120,7 @@ Page {
             }
 
             onImageSaved: {
+                camera.cameraState = Camera.UnloadedState
                 tesseractAPI.analyze(path, picRotation, false);
                 pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
             }
@@ -161,5 +172,15 @@ Page {
             picRotation = sensor.rotationAngle;
             camera.imageCapture.capture();
         }
+    }
+
+    Connections {
+        target: Qt.application
+        onActiveChanged:
+            if(!Qt.application.active) {
+                camera.cameraState = Camera.UnloadedState;
+            } else if (Qt.application.active) {
+                camera.cameraState = Camera.ActiveState;
+            }
     }
 }
