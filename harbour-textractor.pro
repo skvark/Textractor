@@ -19,7 +19,7 @@ QT += network
 
 INCLUDEPATH += src/
 
-LIBS += -ltesseract -llept
+LIBS += -ltesseract -llept -lexif
 
 QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 

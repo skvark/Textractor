@@ -62,6 +62,7 @@ mkdir %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libtesseract.so.3 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/liblept.so.4 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libjpeg.so.62 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libexif.so %{buildroot}%{_datadir}/%{name}/lib/
 # << install post
 
 desktop-file-install --delete-original       \
