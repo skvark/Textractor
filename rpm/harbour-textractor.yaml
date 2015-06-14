@@ -1,6 +1,6 @@
 Name: harbour-textractor
 Summary: Optical character recognition application.
-Version: 0.3
+Version: 0.4
 QMakeOptions:
 - VERSION='%{version}-%{release}'
 Release: 0
