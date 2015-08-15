@@ -63,6 +63,7 @@ Page {
             source: camera
 
         }
+
     }
 
     Image {
@@ -121,7 +122,18 @@ Page {
 
             onImageSaved: {
                 camera.cameraState = Camera.UnloadedState
-                tesseractAPI.analyze(path, picRotation, false);
+
+                if(orientationModes[orientationMode] === "auto") {
+                    tesseractAPI.analyze(path, picRotation, false);
+                } else {
+                    if(orientationModes[orientationMode] === "landscape") {
+                        // landscape is the default orientation
+                        tesseractAPI.analyze(path, 0, false);
+                    } else if (orientationModes[orientationMode] === "portrait") {
+                        // top edge of the device is pointing up, rotate the image 90 degrees clockwise
+                        tesseractAPI.analyze(path, 90, false);
+                    }
+                }
                 pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
             }
         }
@@ -156,13 +168,16 @@ Page {
     }
 
     property int picRotation;
+    property int orientationMode: 0;
+    property var orientationModes: ["auto", "landscape", "portrait"];
 
     IconButton {
         id: captureButton
 
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: root.isLandscape ? 0 : (Screen.width / 2 - width / 2)
+        anchors.rightMargin: root.isLandscape ? 20 : (Screen.width / 3 - width / 3)
+        anchors.bottomMargin: 20
 
         enabled: Camera.ActiveState == camera.cameraState && Camera.ActiveStatus == camera.cameraStatus
 
@@ -171,6 +186,55 @@ Page {
         onClicked: {
             picRotation = sensor.rotationAngle;
             camera.imageCapture.capture();
+        }
+    }
+
+    IconButton {
+
+        id: orientationButton
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        width: 200
+        height: captureButton.height
+        anchors.rightMargin: root.isLandscape ? (Screen.width / 2 - width / 2) + 100 : Screen.width - 150
+        enabled: Camera.ActiveState == camera.cameraState && Camera.ActiveStatus == camera.cameraStatus
+        anchors.bottomMargin: 20
+
+        icon.source: if(orientationModes[orientationMode] !== "auto") {
+                        return "image://theme/icon-camera-backcamera"
+                     } else {
+                        return "image://theme/icon-camera-automatic"
+                     }
+
+        icon.scale: if(orientationModes[orientationMode] === "auto") {
+                        return 0.5;
+                     } else {
+                        return 1.0;
+                    }
+
+        icon.rotation: if(orientationModes[orientationMode] === "landscape") {
+                          return -90;
+                       } else {
+                           return 0;
+                       }
+
+        icon.anchors.left: orientationButton.left
+
+        Text {
+            text: "Orientation: " + orientationModes[orientationMode];
+            anchors.left: parent.left
+            height: parent.height
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 130
+            color: Theme.primaryColor
+            font.pixelSize: Theme.fontSizeExtraSmall
+        }
+
+        onClicked: {
+            ++orientationMode;
+            if(orientationMode > 2) {
+                orientationMode = 0;
+            }
         }
     }
 
