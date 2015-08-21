@@ -45,8 +45,22 @@ TesseractAPI::~TesseractAPI()
     api_ = 0;
 }
 
-void TesseractAPI::analyze(QString imagepath, int rotation, bool gallery)
+void TesseractAPI::prepareForCropping(QString imagepath, int rotation, bool gallery) {
+
+    watcher_ = new QFutureWatcher<QString>();
+    connect(watcher_, SIGNAL(finished()), this, SLOT(handleRotated()));
+
+    info_.status = QString("Rotating...");
+    info_.rotation = rotation;
+    info_.gallery = gallery;
+
+    QFuture<QString> future = QtConcurrent::run(rotate, imagepath, std::ref(info_));
+    watcher_->setFuture(future);
+}
+
+void TesseractAPI::analyze(QString imagepath, QVariant cropPoints)
 {
+    imagepath.replace("file://", "");
     // Run the cpu-heavy stuff in another thread.
     watcher_ = new QFutureWatcher<QString>();
     connect(watcher_, SIGNAL(finished()), this, SLOT(handleAnalyzed()));
@@ -55,8 +69,7 @@ void TesseractAPI::analyze(QString imagepath, int rotation, bool gallery)
     monitor_->cancel = (CANCEL_FUNC)&TesseractAPI::cancelCallback;
     monitor_->cancel_this = this;
     info_.status = QString("Initializing...");
-    info_.rotation = rotation;
-    info_.gallery = gallery;
+    info_.cropPoints = cropPoints.toMap();
 
     // Since the QtConcurrent::run creates internal copies of the parameters
     // the status parameter is passed as wrapped reference using std::ref().
@@ -135,6 +148,17 @@ void TesseractAPI::handleAnalyzed()
 
     // disconnect and destroy the QFutureWatcher
     disconnect(watcher_, SIGNAL(finished()), this, SLOT(handleAnalyzed()));
+    delete watcher_;
+    watcher_ = 0;
+}
+
+void TesseractAPI::handleRotated()
+{
+    // send results to the UI
+    emit rotated(watcher_->future().result());
+
+    // disconnect and destroy the QFutureWatcher
+    disconnect(watcher_, SIGNAL(finished()), this, SLOT(handleRotated()));
     delete watcher_;
     watcher_ = 0;
 }

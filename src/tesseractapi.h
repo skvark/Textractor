@@ -10,7 +10,7 @@
 #include <QFutureWatcher>
 #include <QTimer>
 #include <settings.h>
-#include <dowloadmanager.h>
+#include <downloadmanager.h>
 #include "imageprocessor.h"
 
 
@@ -24,7 +24,8 @@ public:
     ~TesseractAPI();
 
     // Does the whole analyzing process
-    Q_INVOKABLE void analyze(QString imagepath, int rotation, bool gallery);
+    Q_INVOKABLE void analyze(QString imagepath, QVariant cropPoints);
+    Q_INVOKABLE void prepareForCropping(QString imagepath, int rotation, bool gallery);
     Q_INVOKABLE void cancel();
 
     Q_INVOKABLE void resetSettings();
@@ -44,7 +45,6 @@ public:
         return api->isCancel();
     }
 
-
 signals:
     // Emitted when the OCR is done,
     // text contains results text
@@ -58,10 +58,13 @@ signals:
     void languageExtracting(QString lang);
     void languageReady(QString lang);
     void progressStatus(qint64 downloaded, qint64 total);
+    void rotated(QString path);
 
 public slots:
     // Handler for the QFutureWatcher result
     void handleAnalyzed();
+    // Handler for the QFutureWatcher result
+    void handleRotated();
     // Slot for _timer
     void update();
 

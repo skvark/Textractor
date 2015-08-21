@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QTransform>
 #include <QFile>
+#include <QLineF>
 #include <libexif/exif-data.h>
 
 Pix* preprocess(Pix *image, int sX, int sY,
@@ -179,14 +180,7 @@ QImage rotateByExif(int orientation, QImage img)
     return img;
 }
 
-QString run(QString imagepath,
-            ETEXT_DESC* monitor,
-            tesseract::TessBaseAPI* api,
-            SettingsManager *settings,
-            Info &info) {
-
-    info.status = QString("Initializing...");
-    Pix *pixs;
+QString rotate(QString imagepath, Info &info) {
 
     QImage img(imagepath);
     img.setDotsPerMeterX(11811.025); // magic value :D = 300 dpi
@@ -210,6 +204,139 @@ QString run(QString imagepath,
     }
 
     img.save(imagepath, "jpg", 100);
+    return imagepath;
+}
+
+void crop(QString imagepath, Info &info)
+{
+    QImage img(imagepath);
+    QMap<QString, QPointF> points;
+    bool cropNeeded = false;
+
+    // check if the points were moved
+    foreach(QVariant corner, info.cropPoints) {
+
+        QString key = info.cropPoints.key(corner);
+        QPointF point = corner.toPointF();
+        points.insert(key, point);
+
+        if(key == "topLeft") {
+            if (point.x() != 0 || point.y() != 0) {
+                cropNeeded = true;
+            }
+        }
+
+        if(key == "topRight") {
+            if (point.x() != img.width() || point.y() != 0) {
+                cropNeeded = true;
+            }
+        }
+
+        if(key == "bottomRight") {
+            if (point.x() != img.width() || point.y() != img.height()) {
+                cropNeeded = true;
+            }
+        }
+
+        if(key == "topLeft") {
+            if (point.x() != 0 || point.y() != img.height()) {
+                cropNeeded = true;
+            }
+        }
+    }
+
+    if(!cropNeeded) {
+        return;
+    }
+
+    qreal width = 0;
+    qreal height = 0;
+
+    // Calculate the size of the new image
+    QLineF topLine(points.value("topLeft"), points.value("topRight"));
+    QLineF bottomLine(points.value("bottomLeft"), points.value("bottomRight"));
+    QLineF leftLine(points.value("topLeft"), points.value("bottomLeft"));
+    QLineF rightLine(points.value("topRight"), points.value("bottomRight"));
+
+    if(topLine.length() > bottomLine.length()) {
+        width = topLine.length();
+    } else {
+        width = bottomLine.length();
+    }
+
+    if(topLine.length() > bottomLine.length()) {
+        height = leftLine.length();
+    } else {
+        height = rightLine.length();
+    }
+
+    // Create the QPolygonF containing the corner points in user specified quadrilateral arrangement
+    QPolygonF fromPolygon;
+    fromPolygon << points.value("topLeft");
+    fromPolygon << points.value("topRight");
+    fromPolygon << points.value("bottomRight");
+    fromPolygon << points.value("bottomLeft");
+
+    // target polygon
+    QPolygonF toPolygon;
+    toPolygon << QPointF(0, 0);
+    toPolygon << QPointF(width, 0);
+    toPolygon << QPointF(width, height);
+    toPolygon << QPointF(0, height);
+
+    QTransform transform;
+    bool success = QTransform::quadToQuad(fromPolygon, toPolygon, transform);
+
+    if (!success) {
+        qDebug() << "Could not create the transformation matrix.";
+        return;
+    }
+
+    // The resulting image has to be cropped by transferring the original
+    // image top left, top right and bottom left coordinates
+    // to the transformed image coordinates.
+    // After this the crop offset can be calculated.
+    QPoint tl = transform.map(QPoint(0, 0));
+    QPoint bl = transform.map(QPoint(0, img.height()));
+    QPoint tr = transform.map(QPoint(img.width(), 0));
+
+    // execute the transform
+    img = img.transformed(transform);
+
+    qDebug() << tl << bl << tr;
+
+    int x;
+    int y;
+
+    if(-tl.x() > -bl.x()) {
+        x = -tl.x();
+    } else {
+        x = -bl.x();
+    }
+
+    if(-tr.y() > -tl.y()) {
+        y = -tr.y();
+    } else {
+        y = -tl.y();
+    }
+
+    // This is the top left coordinate of the crop area
+    qDebug() << x << y;
+
+    img = img.copy(x, y, width, height);
+    img.save(imagepath, "jpg", 100);
+}
+
+QString run(QString imagepath,
+            ETEXT_DESC* monitor,
+            tesseract::TessBaseAPI* api,
+            SettingsManager *settings,
+            Info &info) {
+
+    info.status = QString("Cropping...");
+    Pix *pixs;
+
+    crop(imagepath, info);
 
     char* path = imagepath.toLocal8Bit().data();
     pixs = pixRead(path);

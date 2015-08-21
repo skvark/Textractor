@@ -30,8 +30,8 @@ SOURCES += \
     src/imageprocessor.cpp \
     src/harbour-textractor.cpp \
     src/settings.cpp \
-    src/dowloadmanager.cpp \
-    src/cameramodecontrol.cpp
+    src/cameramodecontrol.cpp \
+    src/downloadmanager.cpp
 
 OTHER_FILES += qml/harbour-textractor.qml \
     qml/cover/CoverPage.qml \
@@ -50,7 +50,9 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/MainPage.qml \
     qml/pages/DownloadPage.qml \
     qml/pages/About.qml \
-    rpm/harbour-textractor.yaml
+    rpm/harbour-textractor.yaml \
+    qml/pages/CroppingPage.qml \
+    qml/pages/CornerPoint.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
@@ -60,6 +62,6 @@ HEADERS += \
     src/tesseractapi.h \
     src/imageprocessor.h \
     src/settings.h \
-    src/dowloadmanager.h \
-    src/cameramodecontrol.h
+    src/cameramodecontrol.h \
+    src/downloadmanager.h
 

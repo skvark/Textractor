@@ -8,6 +8,7 @@ import harbour.textractor.cameramodecontrol 1.0
 Page {
     id: root
 
+    property bool cropReady: false;
     allowedOrientations: Orientation.All
 
     Component.onCompleted: {
@@ -22,8 +23,12 @@ Page {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Activating && internal.complete) {
+        if (status === PageStatus.Activating && internal.complete && !cropReady) {
             camera.cameraState = Camera.ActiveState;
+        }
+        if (status === PageStatus.Active && cropReady) {
+            cropReady = false;
+            pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true });
         }
     }
 
@@ -124,17 +129,20 @@ Page {
                 camera.cameraState = Camera.UnloadedState
 
                 if(orientationModes[orientationMode] === "auto") {
-                    tesseractAPI.analyze(path, picRotation, false);
+                    tesseractAPI.prepareForCropping(path, picRotation, false);
                 } else {
                     if(orientationModes[orientationMode] === "landscape") {
                         // landscape is the default orientation
-                        tesseractAPI.analyze(path, 0, false);
+                        tesseractAPI.prepareForCropping(path, 0, false);
                     } else if (orientationModes[orientationMode] === "portrait") {
                         // top edge of the device is pointing up, rotate the image 90 degrees clockwise
-                        tesseractAPI.analyze(path, 90, false);
+                        tesseractAPI.prepareForCropping(path, 90, false);
                     }
                 }
-                pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
+                var dialog = pageStack.push(Qt.resolvedUrl("CroppingPage.qml"), { loading: true });
+                dialog.accepted.connect(function() {
+                    cropReady = true;
+                });
             }
         }
 

@@ -1,4 +1,4 @@
-#include "dowloadmanager.h"
+#include "downloadmanager.h"
 #include <QDir>
 #include <QStandardPaths>
 #include <QFile>
