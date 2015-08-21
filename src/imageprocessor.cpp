@@ -35,16 +35,25 @@ Pix* preprocess(Pix *image, int sX, int sY,
     float width = (image2->w + sX - 1) / sX;
     float height = (image2->h + sY - 1) / sY;
 
+    qDebug() << width;
+    qDebug() << height;
+
     if(width < 5 || height < 5) {
 
         if (width < height) {
-            scaling_factor = 5.1 / width;
+            scaling_factor = 5 * sX / image2->w;
         } else {
-            scaling_factor = 5.1 / height;
+            scaling_factor = 5 * sY / image2->h;
         }
         image2 = pixScaleGrayLI(image2, scaling_factor, scaling_factor);
 
     }
+
+    width = (image2->w + sX - 1) / sX;
+    height = (image2->h + sY - 1) / sY;
+
+    qDebug() << "adjusted" << width;
+    qDebug() << "adjusted" << height;
 
     l_int32 pthresh;
     image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY,

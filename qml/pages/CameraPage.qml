@@ -28,6 +28,7 @@ Page {
         }
         if (status === PageStatus.Active && cropReady) {
             cropReady = false;
+            backNavigation = true;
             pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true });
         }
     }
@@ -67,6 +68,13 @@ Page {
 
             source: camera
 
+        }
+
+        BusyIndicator {
+            id: busyind
+            anchors.centerIn: parent
+            size: BusyIndicatorSize.Large
+            running: cropReady;
         }
 
     }
@@ -141,6 +149,7 @@ Page {
                 }
                 var dialog = pageStack.push(Qt.resolvedUrl("CroppingPage.qml"), { loading: true });
                 dialog.accepted.connect(function() {
+                    root.backNavigation = false;
                     cropReady = true;
                 });
             }
