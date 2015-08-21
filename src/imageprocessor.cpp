@@ -35,9 +35,6 @@ Pix* preprocess(Pix *image, int sX, int sY,
     float width = (image2->w + sX - 1) / sX;
     float height = (image2->h + sY - 1) / sY;
 
-    qDebug() << width;
-    qDebug() << height;
-
     if(width < 5 || height < 5) {
 
         if (width < height) {
@@ -48,12 +45,6 @@ Pix* preprocess(Pix *image, int sX, int sY,
         image2 = pixScaleGrayLI(image2, scaling_factor, scaling_factor);
 
     }
-
-    width = (image2->w + sX - 1) / sX;
-    height = (image2->h + sY - 1) / sY;
-
-    qDebug() << "adjusted" << width;
-    qDebug() << "adjusted" << height;
 
     l_int32 pthresh;
     image3 = pixOtsuThreshOnBackgroundNorm(image2, NULL, sX, sY,
@@ -216,45 +207,53 @@ QString rotate(QString imagepath, Info &info) {
     return imagepath;
 }
 
-void crop(QString imagepath, Info &info)
-{
-    QImage img(imagepath);
-    QMap<QString, QPointF> points;
+bool getCropPoints(QMap<QString, QPointF> &points, QMap<QString, QVariant> &cropPoints, QImage &img) {
+
     bool cropNeeded = false;
-
     // check if the points were moved
-    foreach(QVariant corner, info.cropPoints) {
+    foreach(QVariant corner, cropPoints) {
 
-        QString key = info.cropPoints.key(corner);
+        QString key = cropPoints.key(corner);
         QPointF point = corner.toPointF();
         points.insert(key, point);
 
+        int w = img.width() - 1;
+        int h = img.height() - 1;
+
         if(key == "topLeft") {
-            if (point.x() != 0 || point.y() != 0) {
+            if (point.x() > 1 || point.y() > 1) {
                 cropNeeded = true;
             }
         }
 
         if(key == "topRight") {
-            if (point.x() != img.width() || point.y() != 0) {
+            if (point.x() < w || point.y() > 1) {
                 cropNeeded = true;
             }
         }
 
         if(key == "bottomRight") {
-            if (point.x() != img.width() || point.y() != img.height()) {
+            if (point.x() < w || point.y() < h ) {
                 cropNeeded = true;
             }
         }
 
-        if(key == "topLeft") {
-            if (point.x() != 0 || point.y() != img.height()) {
+        if(key == "bottomLeft") {
+            if (point.x() > 1 || point.y() < h) {
                 cropNeeded = true;
             }
         }
     }
+    return cropNeeded;
+}
 
-    if(!cropNeeded) {
+void crop(QString imagepath, Info &info)
+{
+    QImage img(imagepath);
+    QMap<QString, QPointF> points;
+
+    if(!getCropPoints(points, info.cropPoints, img)) {
+        // crop not needed
         return;
     }
 
@@ -279,7 +278,8 @@ void crop(QString imagepath, Info &info)
         height = rightLine.length();
     }
 
-    // Create the QPolygonF containing the corner points in user specified quadrilateral arrangement
+    // Create the QPolygonF containing the corner points
+    // in user specified quadrilateral arrangement
     QPolygonF fromPolygon;
     fromPolygon << points.value("topLeft");
     fromPolygon << points.value("topRight");
@@ -294,6 +294,7 @@ void crop(QString imagepath, Info &info)
     toPolygon << QPointF(0, height);
 
     QTransform transform;
+    // crop matrix (actually perspective transform matrix)
     bool success = QTransform::quadToQuad(fromPolygon, toPolygon, transform);
 
     if (!success) {
@@ -311,8 +312,6 @@ void crop(QString imagepath, Info &info)
 
     // execute the transform
     img = img.transformed(transform);
-
-    qDebug() << tl << bl << tr;
 
     int x;
     int y;
