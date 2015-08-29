@@ -104,7 +104,6 @@ Dialog {
             }
 
             onClicked: {
-                lastIndex = index;
                 if(tesseractAPI.settings.isLangDataAvailable(modelData)) {
                     listView.currentIndex = index;
                     current = modelData;
@@ -112,7 +111,6 @@ Dialog {
                     var dialog = pageStack.push(Qt.resolvedUrl("DownloadDialog.qml"), { language: modelData });
                     lang = dialog.language;
                     dialog.accepted.connect(function() {
-                        listView.currentIndex = lastIndex;
                         current = modelData;
                         selectCompleted = true;
                     })
@@ -124,7 +122,6 @@ Dialog {
     }
 
     property string current;
-    property int lastIndex;
     property bool selectCompleted: false;
     property string lang;
 
@@ -133,8 +130,9 @@ Dialog {
 
         onLanguageReady: {
             listView.model = [];
-            listView.model = tesseractAPI.settings.getLanguageList();
-            listView.currentIndex = lastIndex;
+            var langs = tesseractAPI.settings.getLanguageList();
+            listView.model = langs;
+            listView.currentIndex = langs.indexOf(current);
         }
     }
 }

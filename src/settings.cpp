@@ -51,6 +51,24 @@ QString SettingsManager::getLanguageCode(QString language)
 
 QStringList SettingsManager::getLanguageList()
 {
+    QStringList langs;
+    QStringList langs2;
+
+    // Yeah, not very efficient but
+    // the list is short enough for this
+    foreach(QString lang, langs_) {
+        if(isLangDataAvailable(lang)) {
+            langs.append(lang);
+        } else {
+            langs2.append(lang);
+        }
+    }
+
+    langs.sort();
+    langs2.sort();
+
+    langs_ = langs + langs2;
+
     return langs_;
 }
 
