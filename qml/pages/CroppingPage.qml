@@ -10,6 +10,12 @@ Dialog {
 
     Component.onCompleted: {
         curPoint = topLeft.objectName
+        if(tesseractAPI.getRotated()) {
+            cropView.source = tesseractAPI.getRotatedPath();
+            tesseractAPI.setRotated(false);
+            loading = false;
+            busyind.running = false;
+        }
     }
 
     DialogHeader {
@@ -106,6 +112,7 @@ Dialog {
             width: parent.width
             height: cropDialog.height - header.height - info.height - Theme.paddingMedium * 4
             fillMode: Image.PreserveAspectFit
+            cache: false
 
             CornerPoint {
 

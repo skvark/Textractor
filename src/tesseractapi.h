@@ -39,6 +39,9 @@ public:
     SettingsManager *settings() const;
 
     bool isCancel();
+    Q_INVOKABLE void setRotated(bool state);
+    Q_INVOKABLE bool getRotated();
+    Q_INVOKABLE QString getRotatedPath();
 
     static bool cancelCallback(void *cancel_this, int words) {
         TesseractAPI* api = static_cast<TesseractAPI*>(cancel_this);
@@ -73,6 +76,8 @@ private:
     tesseract::TessBaseAPI* api_;
     QFutureWatcher<QString> *watcher_;
     QTimer *timer_;
+    QString rotatedPath_;
+    bool rotated_;
 
     ETEXT_DESC *monitor_;
 

@@ -79,7 +79,7 @@ void TesseractAPI::analyze(QString imagepath, QVariant cropPoints)
 
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
-    timer_->start(500);
+    timer_->start(250);
 }
 
 void TesseractAPI::cancel()
@@ -137,6 +137,21 @@ bool TesseractAPI::isCancel()
     return true;
 }
 
+void TesseractAPI::setRotated(bool state)
+{
+    rotated_ = state;
+}
+
+bool TesseractAPI::getRotated()
+{
+    return rotated_;
+}
+
+QString TesseractAPI::getRotatedPath()
+{
+    return rotatedPath_;
+}
+
 void TesseractAPI::handleAnalyzed()
 {
     // send results to the UI
@@ -155,6 +170,8 @@ void TesseractAPI::handleAnalyzed()
 void TesseractAPI::handleRotated()
 {
     // send results to the UI
+    setRotated(true);
+    rotatedPath_ = watcher_->future().result();
     emit rotated(watcher_->future().result());
 
     // disconnect and destroy the QFutureWatcher

@@ -5,6 +5,9 @@ import harbour.textractor.settingsmanager 1.0
 Page {
 
     id: mainPage
+    property bool cropReady: false;
+    property bool selectReady: false;
+    property bool idle: true;
 
     SilicaFlickable {
         id: flickable
@@ -13,6 +16,7 @@ Page {
 
         PullDownMenu {
             id: menu
+            enabled: idle
 
             MenuItem {
                 text: "About"
@@ -59,6 +63,7 @@ Page {
             label: "Language"
             anchors.top: generalsection.bottom
             value: tesseractAPI.settings.getLanguage();
+            enabled: idle
 
             onClicked: {
                 var dialog = pageStack.push("LanguageDialog.qml")
@@ -79,6 +84,7 @@ Page {
             anchors.leftMargin: 2 * Theme.paddingMedium
             height: 300
             z: -1
+            enabled: idle
 
             Image {
                 anchors.fill: parent
@@ -111,6 +117,7 @@ Page {
             anchors.leftMargin: 2 * Theme.paddingMedium
             height: 300
             z: -1
+            enabled: idle
 
             Image {
                 anchors.fill: parent
@@ -129,13 +136,34 @@ Page {
                 text: "Select an image from the gallery"
             }
 
-            onClicked: {
-                var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
-                imagePicker.selectedContentChanged.connect(function() {
-                    tesseractAPI.analyze(String(imagePicker.selectedContent).replace("file://", ""), 0, true);
-                    pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true })
-                });
+            BusyIndicator {
+                id: busyind
+                anchors.centerIn: parent
+                size: BusyIndicatorSize.Large
+                running: cropReady || selectReady;
+                z: 99
             }
+
+            onClicked: {
+
+                idle = false;
+                var imagePicker = pageStack.push("Sailfish.Pickers.ImagePickerPage");
+
+                imagePicker.selectedContentChanged.connect(function() {
+                    selectReady = true;
+                    tesseractAPI.prepareForCropping(String(imagePicker.selectedContent).replace("file://", ""), 0, true);
+                });
+
+                imagePicker.onStatusChanged.connect(function() {
+                    if (imagePicker.status === PageStatus.Deactivating) {
+                        if (imagePicker._navigation === PageNavigation.Back) {
+                            idle = true;
+                        }
+                    }
+                });
+
+            }
+
         }
 
         Rectangle {
@@ -152,11 +180,38 @@ Page {
 
     }
 
+    onStatusChanged: {
+
+        if (status === PageStatus.Active && selectReady) {
+            selectReady = false;
+
+            var dialog = pageStack.push(Qt.resolvedUrl("CroppingPage.qml"), { loading: true });
+
+            dialog.accepted.connect(function() {
+                cropReady = true;
+            });
+
+            dialog.onStatusChanged.connect(function() {
+                if (dialog.status === PageStatus.Deactivating) {
+                    if (dialog._navigation === PageNavigation.Back) {
+                        idle = true;
+                    }
+                }
+            });
+
+        }
+
+        if (status === PageStatus.Active && cropReady) {
+            cropReady = false;
+            idle = true;
+            pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true });
+        }
+    }
+
     Connections {
         target: tesseractAPI
 
         onFirstUse: {
-            console.log("kissa");
             var dialog = pageStack.push("LanguageDialog.qml", {firstuse: true});
             dialog.accepted.connect(function() {
                 lang.value = tesseractAPI.settings.getLanguage();
