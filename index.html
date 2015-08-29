@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Textractor by skvark</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Textractor</h1>
+      <h2 class="project-tagline">OCR application for Sailfish OS. Based on Google&#39;s Tesseract OCR engine and Leptonica image processing library.</h2>
+      <a href="https://github.com/skvark/Textractor" class="btn">View on GitHub</a>
+      <a href="https://github.com/skvark/Textractor/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/skvark/Textractor/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="welcome-to-textractor-documentation" class="anchor" href="#welcome-to-textractor-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Textractor documentation</h3>
+
+<p>Textractor is an OCR (<a href="http://en.wikipedia.org/wiki/Optical_character_recognition">optical character recognition</a>) application. It extracts text from images so that you can edit or save the text on a digital device.</p>
+
+<p>Textractor is based on two third party libraries. The actual recognition is made with Google's <a href="https://code.google.com/p/tesseract-ocr/">Tesseract OCR</a> engine. Some general image manipulation is done with <a href="http://www.leptonica.com/">Leptonica</a> image processing library before the image is passed to the Tesseract for recognition.</p>
+
+<h3>
+<a id="general-information" class="anchor" href="#general-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>General Information</h3>
+
+<p>Upon first use, Textractor will prompt you to choose a language file. The selected file is then downloaded and installed on your device. After that you can start using Textractor. If you need more languages, just select and download them. Once a language file is downloaded, it does not need to be downloaded again.</p>
+
+<p><strong>Question</strong>: <em>Why I need to download the files separately?</em></p>
+
+<p><strong>Answer</strong>: It is recommended by Jolla and by common sense that developers don't ship massive amounts of data files with the application. In this case the application size would have been over 200 MB if all the language files were embedded to the .rpm package.</p>
+
+<h3>
+<a id="supported-image-formats" class="anchor" href="#supported-image-formats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported image formats</h3>
+
+<p>Textractor supports all the image formats which Sailfish OS supports. Images must have 32 bits per pixel. If image does not have 32 bits per pixels, preprocessing step is skipped and results may be poor. However, already preprocessed (Textractor outputs 1 bpp aka binarized image after the preprocessing step and saves it to the gallery) images will work fine. Preprocessed image is always overwritten when new recognition is started.</p>
+
+<h3>
+<a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
+
+<p>Textractor has some adjustable parameters which can improve the recognition results if adjusted correctly. The values are set as a default so that Textractor should work pretty good for most of the images. Most of the settings are rather advanced and I recommend to read instructions below if you want to adjust them. </p>
+
+<h4>
+<a id="postprocessing" class="anchor" href="#postprocessing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Postprocessing</h4>
+
+<p><strong>Minimum word confidence:</strong> Textractor filters the results after recognition based on this value. Higher value means that word is probably correct. Value of 10-20 might help filtering some invalid results out.</p>
+
+<h4>
+<a id="preprocessing" class="anchor" href="#preprocessing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preprocessing</h4>
+
+<p>These settings control the background normalization and Otsu thresholding used in preprocessing. If you touch them, you can always return the default values from the pulley menu.</p>
+
+<p>Leptonica notes (other explanations are from Leptonica sources too):</p>
+
+<blockquote>
+<p>Otsu binarization attempts to split the image into two roughly equal sets of pixels, and it does a very poor job when there are large amounts of dark background.  By doing a background normalization first, to get the background near 255, we remove this problem. Then we use a modified Otsu to estimate the best global threshold on the normalized image.</p>
+</blockquote>
+
+<ul>
+<li>
+<strong>Tile size in pixels:</strong> The dimension of the pixel tile give the amount by which the map is reduced in size from the input image.</li>
+<li>
+<strong>Threshold for determining foreground:</strong> The threshold is used to binarize the input image, in order to locate the foreground components. If this is set too low, some actual foreground may be used to determine the maps; if set too high, there may not be enough background to determine the map values accurately. Typically, it's better to err by setting the threshold too high.</li>
+<li>
+<strong>Min threshold on counts in a tile:</strong> This is a minimum count of pixels in a tile for which a background reading is made, in order for that pixel in the map to be valid. This number should perhaps be at least 1/3 the size of the tile.</li>
+<li>
+<strong>Target bg value for the normalized image:</strong> A target background value for the normalized image.  This should be at least 128. If set too close to 255, some clipping will occur in the result.</li>
+<li>
+<strong>Smoothing factor:</strong> Input for smoothing the map. Each low-pass filter kernel dimension is 2 * (smoothing factor) + 1, so a value of 0 means no smoothing. A value of 1 or 2 is recommended.</li>
+<li>
+<strong>Otsu score fraction:</strong> The scorefract is the fraction of the maximum Otsu score, which is used to determine the range over which the histogram minimum is searched.</li>
+</ul>
+
+<h3>
+<a id="hints-for-better-results" class="anchor" href="#hints-for-better-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hints for better results</h3>
+
+<h4>
+<a id="taking-a-good-picture" class="anchor" href="#taking-a-good-picture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Taking a Good Picture</h4>
+
+<p>To get the best results you should follow a couple of simple guidelines when taking pictures:</p>
+
+<ul>
+<li>Check that the lightning conditions are good. There should be no visible shadows or reflections in the image.</li>
+<li>Check that the color of the background is light and there are no complex textures in it. The background can be also dark: just make sure the text is white or some other light color.</li>
+</ul>
+
+<h4>
+<a id="reasons-for-slow-processing" class="anchor" href="#reasons-for-slow-processing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reasons for slow processing</h4>
+
+<p>Processing will be very slow and the results are obscure if the quality of the picture is bad. Some examples of bad quality pictures:</p>
+
+<ul>
+<li>Underexposure or overexposure</li>
+<li>Distorted (i.e. text is not straight or it's distorted) or blurred (camera moved during the shot) image</li>
+<li>There's complex image or texture behind the actual text to be regocnized</li>
+<li>Hand or some other object casted a shadow to the picture</li>
+<li>There are reflections in the picture</li>
+</ul>
+
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>This application has been developed by <a href="https://github.com/skvark" class="user-mention">@skvark</a>. The icon and Jolla store header image have been created by <a href="https://github.com/fercen" class="user-mention">@fercen</a>.</p>
+
+<h3>
+<a id="bug-reports-and-feature-requests" class="anchor" href="#bug-reports-and-feature-requests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bug Reports and Feature Requests</h3>
+
+<p>Bugs and feature requests can be submitted to the <a href="https://github.com/skvark/Textractor/issues">issues of the repository</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/skvark/Textractor">Textractor</a> is maintained by <a href="https://github.com/skvark">skvark</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
