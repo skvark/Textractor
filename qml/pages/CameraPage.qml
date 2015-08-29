@@ -158,13 +158,8 @@ Page {
         onCameraStatusChanged: {
             if(Camera.LoadedStatus == cameraStatus) {
                 camera.exposure.setAutoAperture()
-                if(!auto) {
-                    camera.exposure.manualShutterSpeed = shutterSpeed;
-                    camera.exposure.manualIso = iso;
-                } else {
-                    camera.exposure.setAutoIsoSensitivity()
-                    camera.exposure.setAutoShutterSpeed()
-                }
+                camera.exposure.setAutoIsoSensitivity()
+                camera.exposure.setAutoShutterSpeed()
             }
         }
     }
@@ -191,67 +186,7 @@ Page {
 
     property int picRotation;
     property int orientationMode: 0;
-    property bool auto: true;
     property var orientationModes: ["auto", "landscape", "portrait"];
-    property string mode: "";
-    property real shutterSpeed: -1;
-    property int isoSpeed: -1;
-    property int shutterIndex: 0;
-    property int isoIndex: 0;
-
-    Rectangle {
-        anchors.fill: manualButton
-        radius: 10;
-        color: Theme.rgba(Theme.highlightBackgroundColor, 0.1)
-    }
-
-    BackgroundItem {
-
-        id: manualButton
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        width: parent.width
-        height: captureButton.height
-        enabled: Camera.ActiveState == camera.cameraState && Camera.ActiveStatus == camera.cameraStatus
-        anchors.topMargin: 20
-        anchors.leftMargin: 30
-        anchors.rightMargin: 30
-
-        Text {
-            text: if(auto) {
-                      "Camera mode: automatic";
-                  } else {
-                      "Camera mode: " + mode;
-                  }
-
-            anchors.left: parent.left
-            height: parent.height
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-            color: Theme.primaryColor
-            font.pixelSize: Theme.fontSizeExtraSmall
-        }
-
-        onClicked: {
-            var dialog = pageStack.push(Qt.resolvedUrl("CameraModePage.qml"), {iso: isoIndex, shutter: shutterIndex});
-            dialog.accepted.connect(function() {
-                if(dialog.shutter !== 0 || dialog.iso !== 0) {
-                    auto = false;
-                    mode = dialog.shutterSpeedsStr[dialog.shutter] + " s, ISO " + dialog.isoSpeedsStr[dialog.iso];
-                    shutterSpeed = dialog.shutterSpeeds[dialog.shutter];
-                    isoSpeed = dialog.isoSpeeds[dialog.iso];
-                    shutterIndex = dialog.shutter;
-                    isoIndex = dialog.iso;
-                    camera.exposure.manualShutterSpeed = shutterSpeed;
-                    camera.exposure.manualIso = isoSpeed;
-                } else {
-                    auto = true;
-                }
-            });
-        }
-    }
 
     IconButton {
         id: captureButton
@@ -266,8 +201,6 @@ Page {
         icon.source: "image://theme/icon-camera-shutter-release"
 
         onClicked: {
-            console.log(camera.exposure.shutterSpeed);
-            console.log(camera.exposure.iso);
             picRotation = sensor.rotationAngle;
             camera.imageCapture.capture();
         }

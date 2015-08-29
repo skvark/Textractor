@@ -52,8 +52,7 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/About.qml \
     rpm/harbour-textractor.yaml \
     qml/pages/CroppingPage.qml \
-    qml/pages/CornerPoint.qml \
-    qml/pages/CameraModePage.qml
+    qml/pages/CornerPoint.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
