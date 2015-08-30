@@ -19,7 +19,7 @@ QT += network
 
 INCLUDEPATH += src/
 
-LIBS += -ltesseract -llept -lexif
+LIBS += -ltesseract -llept -lexif -lpoppler-qt5
 
 QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 
@@ -52,7 +52,8 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/About.qml \
     rpm/harbour-textractor.yaml \
     qml/pages/CroppingPage.qml \
-    qml/pages/CornerPoint.qml
+    qml/pages/CornerPoint.qml \
+    qml/pages/FilePickerDialog.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line

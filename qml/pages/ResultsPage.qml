@@ -15,23 +15,35 @@ Page {
                            textholder.height
                        }
 
-        BusyIndicator {
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: -200
-            size: BusyIndicatorSize.Large
-            running: loading
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: Theme.paddingSmall
+        anchors.rightMargin: Theme.paddingSmall
+
+        Image {
+            id: preprocessedim
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: Theme.paddingLarge
+            width: parent.width
+            height: page.height / 4 * 2.7
+            fillMode: Image.PreserveAspectFit
+            cache: false
+            visible: loading
         }
 
-        ViewPlaceholder {
-            id: pholder
+        BusyIndicator {
+            id: busyind
             anchors.centerIn: parent
-            enabled: loading
-            text: qsTr("Please wait. Processing may take several seconds.")
+            size: BusyIndicatorSize.Large
+            anchors.verticalCenterOffset: -160
+            running: !preprocessed;
         }
 
         ViewPlaceholder {
             id: statusholder
-            anchors.verticalCenterOffset: 200
+            anchors.verticalCenterOffset: 250
             anchors.centerIn: parent
             enabled: loading
             text: ""
@@ -39,7 +51,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder2
-            anchors.verticalCenterOffset: 280
+            anchors.verticalCenterOffset: 330
             anchors.centerIn: parent
             enabled: loading
             text: ""
@@ -50,7 +62,7 @@ Page {
             onClicked: tesseractAPI.cancel();
             visible: loading
             anchors.bottom: parent.bottom;
-            anchors.bottomMargin: 50;
+            anchors.bottomMargin: 30;
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
@@ -77,6 +89,7 @@ Page {
 
             PageHeader {
                 title: qsTr("Extracted text")
+                visible: !loading
             }
 
             anchors.left: parent.left
@@ -101,6 +114,8 @@ Page {
         VerticalScrollDecorator { flickable: info }
     }
 
+    property bool preprocessed: false;
+
     Connections {
         target: tesseractAPI
         onAnalyzed: {
@@ -110,6 +125,10 @@ Page {
         }
         onStateChanged: {
             statusholder.text = state;
+            if(state === "Running OCR..." && preprocessed === false) {
+                preprocessedim.source = tesseractAPI.getPrepdPath();
+                preprocessed = true;
+            }
         }
         onPercentageChanged: {
             statusholder2.text = percentage.toString() + " %";

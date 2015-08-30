@@ -70,7 +70,7 @@ Pix* preprocess(Pix *image, int sX, int sY,
 
 }
 
-void writeToDisk(Pix *img) {
+QString writeToDisk(Pix *img) {
 
     l_uint8* ptr_memory;
     size_t len;
@@ -78,11 +78,12 @@ void writeToDisk(Pix *img) {
 
     QImage testimage;
     testimage.loadFromData((uchar *)ptr_memory, len);
-    testimage.save(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
-                   QString("/textractor_preprocessed.jpg"), "jpg", 100);
+    QString path(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+                 QString("/textractor_preprocessed.jpg"));
+    testimage.save(path, "jpg", 100);
     delete ptr_memory;
     ptr_memory = NULL;
-
+    return path;
 }
 
 QString clean(char* outText, tesseract::TessBaseAPI *api, int confidence) {
@@ -370,7 +371,7 @@ QString run(QString imagepath,
         return QString("An error occured. Image could not be preprocessed.");
     }
 
-    writeToDisk(pixs);
+    info.prepdPath = writeToDisk(pixs);
 
     if(api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data())) {
         qDebug() << "fail";

@@ -42,6 +42,7 @@ public:
     Q_INVOKABLE void setRotated(bool state);
     Q_INVOKABLE bool getRotated();
     Q_INVOKABLE QString getRotatedPath();
+    Q_INVOKABLE QString getPrepdPath();
 
     static bool cancelCallback(void *cancel_this, int words) {
         TesseractAPI* api = static_cast<TesseractAPI*>(cancel_this);

@@ -82,7 +82,7 @@ Page {
             anchors.left: parent.left
             width: parent.width - 4 * Theme.paddingMedium
             anchors.leftMargin: 2 * Theme.paddingMedium
-            height: 300
+            height: 200
             z: -1
             enabled: idle
 
@@ -96,7 +96,7 @@ Page {
             }
 
             Label {
-                anchors.topMargin: 20;
+                anchors.topMargin: 10;
                 anchors.top: parent.top
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
@@ -115,7 +115,7 @@ Page {
             anchors.topMargin: 25;
             width: parent.width - 4 * Theme.paddingMedium
             anchors.leftMargin: 2 * Theme.paddingMedium
-            height: 300
+            height: 200
             z: -1
             enabled: idle
 
@@ -129,7 +129,7 @@ Page {
             }
 
             Label {
-                anchors.topMargin: 20;
+                anchors.topMargin: 10;
                 anchors.top: parent.top
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
@@ -166,6 +166,46 @@ Page {
 
         }
 
+        BackgroundItem {
+            id: button3
+            anchors.top: button2.bottom
+            anchors.left: parent.left
+            anchors.topMargin: 25;
+            width: parent.width - 4 * Theme.paddingMedium
+            anchors.leftMargin: 2 * Theme.paddingMedium
+            height: 200
+            z: -1
+            enabled: idle
+
+            Image {
+                anchors.fill: parent
+                fillMode: Image.Pad
+                horizontalAlignment: Image.AlignHCenter
+                verticalAlignment: Image.AlignVCenter
+                source: "image://theme/icon-l-document"
+                z: 30
+            }
+
+            Label {
+                anchors.topMargin: 10;
+                anchors.top: parent.top
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                text: "Extract text from PDF file"
+            }
+
+            onClicked: {
+
+                var dialog = pageStack.push("FilePickerDialog.qml")
+
+                dialog.accepted.connect(function() {
+                    console.log(dialog.selectedFile);
+                })
+
+            }
+
+        }
+
         Rectangle {
             anchors.fill: button1
             radius: 10;
@@ -174,6 +214,12 @@ Page {
 
         Rectangle {
             anchors.fill: button2
+            radius: 10;
+            color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+        }
+
+        Rectangle {
+            anchors.fill: button3
             radius: 10;
             color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
         }

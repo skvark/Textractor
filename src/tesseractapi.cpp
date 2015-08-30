@@ -152,6 +152,11 @@ QString TesseractAPI::getRotatedPath()
     return rotatedPath_;
 }
 
+QString TesseractAPI::getPrepdPath()
+{
+    return info_.prepdPath;
+}
+
 void TesseractAPI::handleAnalyzed()
 {
     // send results to the UI

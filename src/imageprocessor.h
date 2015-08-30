@@ -12,6 +12,7 @@
 struct Info {
     int rotation;
     QString status;
+    QString prepdPath;
     bool gallery;
     QMap<QString, QVariant> cropPoints;
 };
@@ -21,7 +22,7 @@ Pix* preprocess(Pix *image, int sX, int sY,
                 int bgval, int smoothX,
                 int smoothY, float scoreFract);
 
-void writeToDisk(Pix *img);
+QString writeToDisk(Pix *img);
 
 int getOrientation(char *imgPath);
 
