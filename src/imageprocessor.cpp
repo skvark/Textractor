@@ -38,9 +38,9 @@ Pix* preprocess(Pix *image, int sX, int sY,
     if(width < 5 || height < 5) {
 
         if (width < height) {
-            scaling_factor = 6 * sX / image2->w;
+            scaling_factor = 6.0 * sX / image2->w;
         } else {
-            scaling_factor = 6 * sY / image2->h;
+            scaling_factor = 6.0 * sY / image2->h;
         }
         image2 = pixScaleGrayLI(image2, scaling_factor, scaling_factor);
 
