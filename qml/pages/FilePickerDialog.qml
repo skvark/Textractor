@@ -5,7 +5,7 @@ import harbour.textractor.folderlistmodel 1.0
 Dialog {
 
     id: filePicker
-    property string currentFolder: "/home/nemo/";
+    property string currentFolder: tesseractAPI.documentsPath();
     property url selectedFile: "";
 
     SilicaFlickable {
@@ -93,7 +93,7 @@ Dialog {
 
             onClicked: {
                 currentFolder = String(folderModel.parentFolder).replace("file://", "");
-                if(currentFolder !== "") {
+                if(currentFolder !== "/") {
                     folderModel.folder = folderModel.parentFolder;
                 }
             }

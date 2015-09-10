@@ -122,6 +122,11 @@ QString TesseractAPI::leptonicaVersion()
     return version;
 }
 
+QString TesseractAPI::documentsPath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+}
+
 SettingsManager *TesseractAPI::settings() const
 {
     return settingsManager_;

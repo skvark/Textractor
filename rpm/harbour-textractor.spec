@@ -7,7 +7,7 @@ Name:       harbour-textractor
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libtesseract|libjpeg|libexif\\.so\\.12|libc\\.so\\.6\\(GLIBC_2\\.11\\)|liblept.*$
+%define __requires_exclude ^libtesseract|libjpeg|libexif\\.so\\.12|libc\\.so\\.6\\(GLIBC_2\\.11\\)|libpoppler-qt5\\.so\\.1|libQt5Widgets\\.so\\.5|libfreetype\\.so\\.6|libpoppler\\.so\\.43|liblept.*$
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
@@ -63,6 +63,10 @@ cp -f /usr/lib/libtesseract.so.3 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/liblept.so.4 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libjpeg.so.62 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libexif.so.12 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libpoppler-qt5.so.1 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libQt5Widgets.so.5 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libfreetype.so.6 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libpoppler.so.43 %{buildroot}%{_datadir}/%{name}/lib/
 # << install post
 
 desktop-file-install --delete-original       \

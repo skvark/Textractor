@@ -35,6 +35,7 @@ public:
 
     Q_INVOKABLE QString tesseractVersion();
     Q_INVOKABLE QString leptonicaVersion();
+    Q_INVOKABLE QString documentsPath();
 
     SettingsManager *settings() const;
 
