@@ -14,6 +14,7 @@
 #include <settings.h>
 #include <QtQml>
 #include <cameramodecontrol.h>
+#include "lib/folderlistmodel/qquickfolderlistmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("tesseractAPI", &interface);
     qmlRegisterType<SettingsManager>("harbour.textractor.settingsmanager", 1, 0, "SettingsManager");
     qmlRegisterType<CameraModeControl>("harbour.textractor.cameramodecontrol", 1, 0, "CameraModeControl");
+    qmlRegisterType<QQuickFolderListModel>("harbour.textractor.folderlistmodel", 1, 0, "FolderListModel");
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
     view->setSource(SailfishApp::pathTo("qml/harbour-textractor.qml"));

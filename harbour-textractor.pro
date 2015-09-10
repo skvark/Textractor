@@ -14,14 +14,20 @@ TARGET = harbour-textractor
 
 CONFIG += sailfishapp
 CONFIG += c++11
-QT += multimedia
-QT += network
+QT += multimedia network core-private qml-private
 
 INCLUDEPATH += src/
+INCLUDEPATH += lib/
 
 LIBS += -ltesseract -llept -lexif -lpoppler-qt5
 
 QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
+
+SOURCES += lib/folderlistmodel/qquickfolderlistmodel.cpp \
+    lib/folderlistmodel/fileinfothread.cpp
+HEADERS += lib/folderlistmodel/qquickfolderlistmodel.h \
+    lib/folderlistmodel/fileproperty_p.h \
+    lib/folderlistmodel/fileinfothread_p.h
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
