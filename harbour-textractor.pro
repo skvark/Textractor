@@ -14,7 +14,7 @@ TARGET = harbour-textractor
 
 CONFIG += sailfishapp
 CONFIG += c++11
-QT += multimedia network core-private qml-private
+QT += multimedia network core-private qml-private quick
 
 INCLUDEPATH += src/
 INCLUDEPATH += lib/
@@ -24,10 +24,14 @@ LIBS += -ltesseract -llept -lexif -lpoppler-qt5
 QMAKE_RPATHDIR += /usr/share/harbour-textractor/lib/
 
 SOURCES += lib/folderlistmodel/qquickfolderlistmodel.cpp \
-    lib/folderlistmodel/fileinfothread.cpp
+    lib/folderlistmodel/fileinfothread.cpp \
+    src/pdfhandler.cpp \
+    src/PDFThumbnailProvider.cpp
 HEADERS += lib/folderlistmodel/qquickfolderlistmodel.h \
     lib/folderlistmodel/fileproperty_p.h \
-    lib/folderlistmodel/fileinfothread_p.h
+    lib/folderlistmodel/fileinfothread_p.h \
+    src/pdfhandler.h \
+    src/PDFThumbnailProvider.h
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
@@ -59,7 +63,8 @@ OTHER_FILES += qml/harbour-textractor.qml \
     rpm/harbour-textractor.yaml \
     qml/pages/CroppingPage.qml \
     qml/pages/CornerPoint.qml \
-    qml/pages/FilePickerDialog.qml
+    qml/pages/FilePickerDialog.qml \
+    qml/pages/PageSelectPage.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line

@@ -12,6 +12,7 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     monitor_ = new ETEXT_DESC();
     settingsManager_ = new SettingsManager();
     downloadManager_ = new DownloadManager();
+    PDFhandler_ = new PDFHandler();
 
     QObject::connect(downloadManager_, SIGNAL(downloaded(QString)),
                      this, SIGNAL(languageExtracting(QString)));
@@ -40,6 +41,8 @@ TesseractAPI::~TesseractAPI()
     downloadManager_ = 0;
     delete timer_;
     timer_ = 0;
+    delete PDFhandler_;
+    PDFhandler_ = 0;
     api_->End();
     delete api_;
     api_ = 0;
@@ -75,6 +78,49 @@ void TesseractAPI::analyze(QString imagepath, QVariant cropPoints)
     // the status parameter is passed as wrapped reference using std::ref().
     // Note that std::ref is a C++11 feature.
     QFuture<QString> future = QtConcurrent::run(run, imagepath, monitor_, api_, settingsManager_, std::ref(info_));
+    watcher_->setFuture(future);
+
+    // Periodically firing timer to get progress reports to the UI.
+    connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
+    timer_->start(250);
+}
+
+PDFThumbnailProvider *TesseractAPI::getThumbnailProvider() {
+    return PDFhandler_->getThumbnailProvider();
+}
+
+void TesseractAPI::getThumbnails(QString path) {
+
+    PDFwatcher_ = new QFutureWatcher<QStringList>();
+    connect(PDFwatcher_, SIGNAL(finished()), this, SLOT(handleThumbnails()));
+    QFuture<QStringList> future = QtConcurrent::run(PDFhandler_, &PDFHandler::getThumbnails, path.replace("file://", ""), std::ref(status_));
+    PDFwatcher_->setFuture(future);
+    // Periodically firing timer to get progress reports to the UI.
+    connect(timer_, SIGNAL(timeout()), this, SLOT(updatePDFStatus()));
+    timer_->start(100);
+}
+
+QStringList TesseractAPI::getIdsList()
+{
+    return PDFhandler_->getIds();
+}
+
+void TesseractAPI::analyzePDF(QList<int> pages)
+{
+    // Run the cpu-heavy stuff in another thread.
+    watcher_ = new QFutureWatcher<QString>();
+    connect(watcher_, SIGNAL(finished()), this, SLOT(handleAnalyzed()));
+
+    monitor_->progress = 0;
+    monitor_->cancel = (CANCEL_FUNC)&TesseractAPI::cancelCallback;
+    monitor_->cancel_this = this;
+    info_.status = QString("Initializing...");
+    info_.pages = pages;
+
+    // Since the QtConcurrent::run creates internal copies of the parameters
+    // the status parameter is passed as wrapped reference using std::ref().
+    // Note that std::ref is a C++11 feature.
+    QFuture<QString> future = QtConcurrent::run(runPDF, PDFhandler_, monitor_, api_, settingsManager_, std::ref(info_));
     watcher_->setFuture(future);
 
     // Periodically firing timer to get progress reports to the UI.
@@ -122,9 +168,9 @@ QString TesseractAPI::leptonicaVersion()
     return version;
 }
 
-QString TesseractAPI::documentsPath()
+QString TesseractAPI::homePath()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
 }
 
 SettingsManager *TesseractAPI::settings() const
@@ -190,9 +236,25 @@ void TesseractAPI::handleRotated()
     watcher_ = 0;
 }
 
+void TesseractAPI::handleThumbnails()
+{
+   emit thumbnailsReady(PDFwatcher_->future().result());
+   // disconnect and destroy the QFutureWatcher
+   disconnect(PDFwatcher_, SIGNAL(finished()), this, SLOT(handleThumbnails()));
+   delete PDFwatcher_;
+   PDFwatcher_ = 0;
+   disconnect(timer_, SIGNAL(timeout()), this, SLOT(updatePDFStatus()));
+   timer_->stop();
+}
+
 void TesseractAPI::update() {
-    if(info_.status == "Running OCR...") {
+    if(info_.status.contains("Running OCR...")) {
         emit percentageChanged(monitor_->progress);
     }
     emit stateChanged(info_.status);
+}
+
+void TesseractAPI::updatePDFStatus()
+{
+    emit progressChanged(status_);
 }

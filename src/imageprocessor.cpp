@@ -393,3 +393,62 @@ QString run(QString imagepath,
     api->Clear();
     return text;
 }
+
+QString runPDF(PDFHandler* pdf,
+               ETEXT_DESC* monitor,
+               tesseract::TessBaseAPI* api,
+               SettingsManager *settings,
+               Info &info) {
+
+    QString text;
+
+    foreach(int pageNumber, info.pages) {
+
+        info.status = QString("Converting page %1/%2 to image...").arg(pageNumber, info.pages.length());
+
+        Pix* pageimg = pdf->getPixFromPage(pageNumber);
+
+        if(!pageimg) {
+            continue;
+        }
+
+        info.status = QString("Preprocessing page %1/%2...").arg(pageNumber, info.pages.length());
+
+        Pix *pixs = preprocess(pageimg, settings->getTileSize(), settings->getTileSize(),
+                               settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),
+                               settings->getSmoothingFactor(), settings->getSmoothingFactor(),
+                               settings->getScoreFract());
+
+        pixDestroy(&pageimg);
+
+        if(!pixs) {
+            pixDestroy(&pixs);
+            continue;
+        }
+
+        info.prepdPath = writeToDisk(pixs);
+
+        if(api->Init(NULL, settings->getLanguageCode().toLocal8Bit().data())) {
+            qDebug() << "fail";
+        }
+
+        api->SetPageSegMode(tesseract::PSM_AUTO);
+        api->SetImage(pixs);
+        api->SetSourceResolution(300);
+
+        char *outText;
+        info.status = QString("Running OCR for page %1/%2...").arg(pageNumber, info.pages.length());
+        api->Recognize(monitor);
+        outText = api->GetUTF8Text();
+
+        info.status = QString("Postprocessing page %1/%2...").arg(pageNumber, info.pages.length());
+        pixDestroy(&pixs);
+
+        text += clean(outText, api, settings->getConfidence());
+        text += "\r\n";
+
+    }
+
+    api->Clear();
+    return text;
+}

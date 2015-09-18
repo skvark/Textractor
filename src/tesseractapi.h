@@ -12,6 +12,8 @@
 #include <settings.h>
 #include <downloadmanager.h>
 #include "imageprocessor.h"
+#include "pdfhandler.h"
+#include "PDFThumbnailProvider.h"
 
 
 class TesseractAPI : public QObject
@@ -28,6 +30,8 @@ public:
     Q_INVOKABLE void prepareForCropping(QString imagepath, int rotation, bool gallery);
     Q_INVOKABLE void cancel();
 
+    Q_INVOKABLE void analyzePDF(QList<int> pages);
+
     Q_INVOKABLE void resetSettings();
     Q_INVOKABLE bool isLangDownloaded(QString lang);
     Q_INVOKABLE void downloadLanguage(QString lang);
@@ -35,7 +39,7 @@ public:
 
     Q_INVOKABLE QString tesseractVersion();
     Q_INVOKABLE QString leptonicaVersion();
-    Q_INVOKABLE QString documentsPath();
+    Q_INVOKABLE QString homePath();
 
     SettingsManager *settings() const;
 
@@ -49,6 +53,10 @@ public:
         TesseractAPI* api = static_cast<TesseractAPI*>(cancel_this);
         return api->isCancel();
     }
+
+    PDFThumbnailProvider *getThumbnailProvider();
+    Q_INVOKABLE void getThumbnails(QString path);
+    Q_INVOKABLE QStringList getIdsList();
 
 signals:
     // Emitted when the OCR is done,
@@ -64,20 +72,27 @@ signals:
     void languageReady(QString lang);
     void progressStatus(qint64 downloaded, qint64 total);
     void rotated(QString path);
+    void thumbnailsReady(QStringList ids);
+    void progressChanged(QString pstatus);
 
 public slots:
     // Handler for the QFutureWatcher result
     void handleAnalyzed();
     // Handler for the QFutureWatcher result
     void handleRotated();
+    // Handler for the QFutureWatcher result
+    void handleThumbnails();
     // Slot for _timer
     void update();
+    void updatePDFStatus();
 
 private:
 
     tesseract::TessBaseAPI* api_;
     QFutureWatcher<QString> *watcher_;
+    QFutureWatcher<QStringList> *PDFwatcher_;
     QTimer *timer_;
+    QString status_;
     QString rotatedPath_;
     bool rotated_;
 
@@ -85,6 +100,8 @@ private:
 
     SettingsManager *settingsManager_;
     DownloadManager *downloadManager_;
+    PDFHandler* PDFhandler_;
+    PDFThumbnailProvider* thumbnailProvider_;
 
     Info info_;
     bool cancel_;

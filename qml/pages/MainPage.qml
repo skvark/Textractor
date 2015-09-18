@@ -7,7 +7,9 @@ Page {
     id: mainPage
     property bool cropReady: false;
     property bool selectReady: false;
+    property bool fileReady: false;
     property bool idle: true;
+    property bool pageSelectReady: false;
 
     SilicaFlickable {
         id: flickable
@@ -196,11 +198,21 @@ Page {
 
             onClicked: {
 
+                idle = false;
                 var dialog = pageStack.push("FilePickerDialog.qml")
 
                 dialog.accepted.connect(function() {
-                    console.log(dialog.selectedFile);
+                    fileReady = true;
+                    tesseractAPI.getThumbnails(dialog.selectedFile);
                 })
+
+                dialog.onStatusChanged.connect(function() {
+                    if (dialog.status === PageStatus.Deactivating) {
+                        if (dialog._navigation === PageNavigation.Back) {
+                            idle = true;
+                        }
+                    }
+                });
 
             }
 
@@ -251,6 +263,32 @@ Page {
             cropReady = false;
             idle = true;
             pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true });
+        }
+
+        if (status === PageStatus.Active && pageSelectReady) {
+            pageSelectReady = false;
+            idle = true;
+            pageStack.push(Qt.resolvedUrl("ResultsPage.qml"), { loading: true });
+        }
+
+        if (status === PageStatus.Active && fileReady) {
+
+            fileReady = false;
+
+            var dialog2 = pageStack.push(Qt.resolvedUrl("PageSelectPage.qml"), { loading: true });
+
+            dialog2.accepted.connect(function() {
+                pageSelectReady = true;
+                tesseractAPI.analyzePDF(dialog2.selectedItems);
+            });
+
+            dialog2.onStatusChanged.connect(function() {
+                if (dialog2.status === PageStatus.Deactivating) {
+                    if (dialog2._navigation === PageNavigation.Back) {
+                        idle = true;
+                    }
+                }
+            });
         }
     }
 

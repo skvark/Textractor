@@ -5,8 +5,13 @@ import harbour.textractor.folderlistmodel 1.0
 Dialog {
 
     id: filePicker
-    property string currentFolder: tesseractAPI.documentsPath();
     property url selectedFile: "";
+    property string currentFolder: "";
+
+    Component.onCompleted: {
+        folderModel.folder = tesseractAPI.homePath();
+        currentFolder = tesseractAPI.homePath();
+    }
 
     SilicaFlickable {
 
@@ -93,7 +98,7 @@ Dialog {
 
             onClicked: {
                 currentFolder = String(folderModel.parentFolder).replace("file://", "");
-                if(currentFolder !== "/") {
+                if(currentFolder !== "") {
                     folderModel.folder = folderModel.parentFolder;
                 }
             }
@@ -112,9 +117,8 @@ Dialog {
 
             FolderListModel {
                 id: folderModel
-                // afaik there's no way to get standard paths via qml...
-                folder: currentFolder
                 showOnlyReadable: true
+                nameFilters: ["*.pdf"]
             }
 
             delegate: BackgroundItem {

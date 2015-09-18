@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CameraModeControl>("harbour.textractor.cameramodecontrol", 1, 0, "CameraModeControl");
     qmlRegisterType<QQuickFolderListModel>("harbour.textractor.folderlistmodel", 1, 0, "FolderListModel");
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
+    view->engine()->addImageProvider(QLatin1String("thumbnails"), interface.getThumbnailProvider());
 
     view->setSource(SailfishApp::pathTo("qml/harbour-textractor.qml"));
     view->showFullScreen();

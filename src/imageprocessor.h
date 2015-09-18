@@ -8,12 +8,15 @@
 #include <QImage>
 #include <QMap>
 #include <QPointF>
+#include <QList>
+#include "pdfhandler.h"
 
 struct Info {
     int rotation;
     QString status;
     QString prepdPath;
     bool gallery;
+    QList<int> pages;
     QMap<QString, QVariant> cropPoints;
 };
 
@@ -39,5 +42,11 @@ QString run(QString imagepath,
             tesseract::TessBaseAPI* api,
             SettingsManager *settings,
             Info &info);
+
+QString runPDF(PDFHandler* pdf,
+               ETEXT_DESC* monitor,
+               tesseract::TessBaseAPI* api,
+               SettingsManager *settings,
+               Info &info);
 
 #endif // IMAGEPROCESSOR_H
