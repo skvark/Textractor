@@ -35,7 +35,6 @@ public:
     Q_INVOKABLE void resetSettings();
     Q_INVOKABLE bool isLangDownloaded(QString lang);
     Q_INVOKABLE void downloadLanguage(QString lang);
-    Q_INVOKABLE void deleteLanguage(QString lang);
 
     Q_INVOKABLE QString tesseractVersion();
     Q_INVOKABLE QString leptonicaVersion();
@@ -50,6 +49,7 @@ public:
     Q_INVOKABLE QString getPrepdPath();
 
     static bool cancelCallback(void *cancel_this, int words) {
+        Q_UNUSED(words);
         TesseractAPI* api = static_cast<TesseractAPI*>(cancel_this);
         return api->isCancel();
     }

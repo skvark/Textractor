@@ -43,6 +43,7 @@ void DownloadManager::finished(QNetworkReply *reply)
 
 void DownloadManager::extracted(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    Q_UNUSED(exitCode);
     if(exitStatus == QProcess::NormalExit) {
         QString dataDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
         QString path = dataDir + "/" + fileName + language_ + fileType;
