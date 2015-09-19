@@ -8,6 +8,7 @@ Dialog {
     property bool loading: true;
     property string currentStatus: "";
     property var selectedItems: [];
+    property bool allSelected: false;
 
     DialogHeader {
        id: header
@@ -15,27 +16,30 @@ Dialog {
        cancelText: "Cancel"
     }
 
+    canAccept: false
+    backNavigation: !loading
+
     Column {
 
         id: infolabel
-        width: parent.width
+        width: pageDialog.width
         anchors.top: header.bottom
         height: childrenRect.height
 
         Label {
             id: info
             anchors.left: parent.left
-            anchors.leftMargin: Theme.paddingLarge
             anchors.right: parent.right
+            anchors.leftMargin: Theme.paddingLarge
             anchors.rightMargin: Theme.paddingLarge
-            height: 70
+            width: parent.width
+            height: 60
             wrapMode: Text.Wrap
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.primaryColor
             text: "Select the pages from which you want to extract text."
             z: 20
         }
-
     }
 
     SilicaListView {
@@ -66,15 +70,16 @@ Dialog {
 
             id: delegateitem
             width: parent.width
-            height: img.height
+            height: img.height + Theme.paddingLarge
             contentHeight: childrenRect.height
-            anchors.bottomMargin: Theme.paddingLarge
+            anchors.topMargin: Theme.paddingLarge
+            down: selectedItems.indexOf(index) !== -1
 
             Image {
                 id: img
                 source: "image://thumbnails/" + modelData
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
                 cache: false
             }
 
@@ -91,6 +96,11 @@ Dialog {
                 } else {
                     selectedItems.splice(selectedItems.indexOf(index), 1);
                     down = false;
+                }
+                if(selectedItems.length > 0) {
+                    pageDialog.canAccept = true;
+                } else {
+                    pageDialog.canAccept = false;
                 }
             }
         }

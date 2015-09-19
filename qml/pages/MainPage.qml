@@ -138,14 +138,6 @@ Page {
                 text: "Select an image from the gallery"
             }
 
-            BusyIndicator {
-                id: busyind
-                anchors.centerIn: parent
-                size: BusyIndicatorSize.Large
-                running: cropReady || selectReady;
-                z: 99
-            }
-
             onClicked: {
 
                 idle = false;
@@ -153,6 +145,7 @@ Page {
 
                 imagePicker.selectedContentChanged.connect(function() {
                     selectReady = true;
+                    waitAnim.start();
                     tesseractAPI.prepareForCropping(String(imagePicker.selectedContent).replace("file://", ""), 0, true);
                 });
 
@@ -202,6 +195,7 @@ Page {
                 var dialog = pageStack.push("FilePickerDialog.qml")
 
                 dialog.accepted.connect(function() {
+                    waitAnim2.start();
                     fileReady = true;
                     tesseractAPI.getThumbnails(dialog.selectedFile);
                 })
@@ -225,23 +219,74 @@ Page {
         }
 
         Rectangle {
+            id: b2
             anchors.fill: button2
             radius: 10;
             color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+
+            SequentialAnimation {
+                id: waitAnim
+                running: false
+                loops: Animation.Infinite
+
+                ColorAnimation {
+                    target: b2
+                    property: "color"
+                    from: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+                    to: Theme.rgba(Theme.highlightBackgroundColor, 0.6)
+                    duration: 175
+                }
+
+                ColorAnimation {
+                    target: b2
+                    property: "color"
+                    from: Theme.rgba(Theme.highlightBackgroundColor, 0.6)
+                    to: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+                    duration: 175
+                }
+
+            }
+
         }
 
         Rectangle {
+            id: b3
             anchors.fill: button3
             radius: 10;
             color: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
-        }
 
+            SequentialAnimation {
+                id: waitAnim2
+                running: false
+                loops: Animation.Infinite
+
+                ColorAnimation {
+                    target: b3
+                    property: "color"
+                    from: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+                    to: Theme.rgba(Theme.highlightBackgroundColor, 0.6)
+                    duration: 175
+                }
+
+                ColorAnimation {
+                    target: b3
+                    property: "color"
+                    from: Theme.rgba(Theme.highlightBackgroundColor, 0.6)
+                    to: Theme.rgba(Theme.highlightBackgroundColor, 0.3)
+                    duration: 175
+                }
+
+            }
+        }
     }
 
     onStatusChanged: {
 
         if (status === PageStatus.Active && selectReady) {
             selectReady = false;
+
+            waitAnim.stop();
+            b2.color = Theme.rgba(Theme.highlightBackgroundColor, 0.3)
 
             var dialog = pageStack.push(Qt.resolvedUrl("CroppingPage.qml"), { loading: true });
 
@@ -274,6 +319,8 @@ Page {
         if (status === PageStatus.Active && fileReady) {
 
             fileReady = false;
+            waitAnim2.stop();
+            b3.color = Theme.rgba(Theme.highlightBackgroundColor, 0.3)
 
             var dialog2 = pageStack.push(Qt.resolvedUrl("PageSelectPage.qml"), { loading: true });
 
