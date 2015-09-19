@@ -447,6 +447,7 @@ QString runPDF(PDFHandler* pdf,
         text += "\r\n";
 
         ++info.curPage;
+        monitor->progress = 0;
     }
 
     api->Clear();
