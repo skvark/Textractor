@@ -9,7 +9,7 @@ Page {
 
         id: info
         anchors.fill: parent
-        contentHeight: headerContainer.height + generalsection.height + takingpics.height + section2.height + section2text.height + 50
+        contentHeight: 1750
 
         Column {
             id: headerContainer
@@ -78,6 +78,34 @@ Page {
                   "<li>There are reflections in the picture</li>" +
                   "<li>The picture is in wrong orientation (text should be from left to right in most cases)</li>" +
                   "<ul>";
+        }
+
+        SectionHeader {
+            id: section3
+            text: qsTr("About the PDF Analysis")
+            wrapMode: Text.WordWrap
+            anchors.top: section2text.bottom
+            anchors.topMargin: Theme.paddingLarge
+            anchors.bottomMargin: Theme.paddingLarge
+            height: 100;
+        }
+
+        Label {
+            id: section3text
+            width: parent.width
+            wrapMode: Text.Wrap
+            font.pixelSize: Theme.fontSizeSmall
+            color: Theme.primaryColor
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: section3.bottom
+            anchors.leftMargin: Theme.paddingLarge
+            anchors.rightMargin: Theme.paddingLarge
+            textFormat: Text.RichText;
+            onLinkActivated: Qt.openUrlExternally(link)
+            text: "Running OCR for PDF files is mainly intended for files which have been created for example by a scanner.
+                   This means that the text inside the files is actually in an image format and can't be copied without OCR.
+                   However, this feature will work too for PDF files which have been created by a text editor.";
         }
 
         VerticalScrollDecorator { flickable: info }
