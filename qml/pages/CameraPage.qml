@@ -220,7 +220,7 @@ Page {
         icon.source: if(orientationModes[orientationMode] !== "auto") {
                         return "image://theme/icon-camera-backcamera"
                      } else {
-                        return "image://theme/icon-camera-automatic"
+                        return ""
                      }
 
         icon.scale: if(orientationModes[orientationMode] === "auto") {

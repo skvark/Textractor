@@ -93,7 +93,8 @@ Page {
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
-                source: "image://theme/graphics-cover-camera"
+                source: "image://theme/icon-m-camera"
+                scale: 1.5
                 z: 30
             }
 
