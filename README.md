@@ -1,7 +1,16 @@
-Text Extractor
-==============
+Textractor
+==========
 
-Work in progress. However, most of the core functionality is implemented.
+Textractor is an OCR application for Sailfish OS. Main features:
+
+OCR can be run on:
+- an image taken with the app
+- an image selected from the device
+- a PDF file (one or multiple pages)
+
+Cropping is supported in any reasonable quadrilateral arrangement and perspective correction is applied for the selection. User has access to advanced image preprocessing settings.
+
+Found text can be edited or copied to clipboard. As SFOS is a true multitasking OS, the whole OCR process can be run on background while user can use the device for other purposes at the same time.
 
 Documentation and Help
 ----------------------
@@ -75,11 +84,3 @@ brown dog jumped over the lazy fox.
 L Do Stupid Faster
  With More Energy
 ````
-Screenshots
------------
-
-![preview1](http://relativity.fi/textextractor/20150124230240.jpg)
-![preview2](http://relativity.fi/textextractor/20150124230321.jpg)
-![preview3](http://relativity.fi/textextractor/20150124230358.jpg)
-![preview4](http://relativity.fi/textextractor/20150124230430.jpg)
-![preview5](http://relativity.fi/textextractor/20150124230449.jpg)
