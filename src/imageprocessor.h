@@ -17,6 +17,7 @@ struct Info {
     QString prepdPath;
     bool gallery;
     QList<int> pages;
+    unsigned int curPage;
     QMap<QString, QVariant> cropPoints;
 };
 

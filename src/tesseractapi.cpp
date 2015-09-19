@@ -248,7 +248,7 @@ void TesseractAPI::handleThumbnails()
 }
 
 void TesseractAPI::update() {
-    if(info_.status.contains("Running OCR...")) {
+    if(info_.status.contains("Running OCR")) {
         emit percentageChanged(monitor_->progress);
     }
     emit stateChanged(info_.status);

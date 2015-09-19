@@ -95,6 +95,7 @@ private:
     QString status_;
     QString rotatedPath_;
     bool rotated_;
+    unsigned int previousPage_;
 
     ETEXT_DESC *monitor_;
 

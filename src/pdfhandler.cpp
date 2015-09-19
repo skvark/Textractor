@@ -50,7 +50,7 @@ Pix *PDFHandler::getPixFromPage(int pageNumber)
     QBuffer buffer(&data);
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "jpg", 100);
-    unsigned char* memdata = reinterpret_cast<unsigned char*>(buffer.buffer().data());
+    unsigned char* memdata = (unsigned char*)buffer.buffer().data();
     Pix* img = pixReadMem(memdata, buffer.buffer().size());
 
     delete pdfPage;

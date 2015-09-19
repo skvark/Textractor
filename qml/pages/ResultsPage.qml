@@ -43,7 +43,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder
-            anchors.verticalCenterOffset: 250
+            anchors.verticalCenterOffset: 255
             anchors.centerIn: parent
             enabled: loading
             text: ""
@@ -51,7 +51,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder2
-            anchors.verticalCenterOffset: 330
+            anchors.verticalCenterOffset: 350
             anchors.centerIn: parent
             enabled: loading
             text: ""
@@ -62,7 +62,7 @@ Page {
             onClicked: tesseractAPI.cancel();
             visible: loading
             anchors.bottom: parent.bottom;
-            anchors.bottomMargin: 30;
+            anchors.bottomMargin: 20;
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
@@ -122,16 +122,26 @@ Page {
             area.text = text;
             textholder.height = area.height + 50
             loading = false;
+            preprocessed = true;
         }
+
         onStateChanged: {
             statusholder.text = state;
-            if(state === "Running OCR..." && preprocessed === false) {
+            if(state.indexOf("Running OCR") > -1 && preprocessed === false) {
                 preprocessedim.source = tesseractAPI.getPrepdPath();
                 preprocessed = true;
             }
+            if(preprocessed === true && state.indexOf("Conv") > -1) {
+                statusholder2.text = "";
+                preprocessed = false;
+                preprocessedim.source = ""
+            }
         }
+
         onPercentageChanged: {
-            statusholder2.text = percentage.toString() + " %";
+            if(percentage < 99) {
+                statusholder2.text = percentage.toString() + " %";
+            }
         }
     }
 }

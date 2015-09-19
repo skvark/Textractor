@@ -401,10 +401,11 @@ QString runPDF(PDFHandler* pdf,
                Info &info) {
 
     QString text;
+    info.curPage = 1;
 
     foreach(int pageNumber, info.pages) {
 
-        info.status = QString("Converting page %1/%2 to image...").arg(pageNumber, info.pages.length());
+        info.status = QString("Converting page %1/%2 to image...").arg(info.curPage).arg(info.pages.length());
 
         Pix* pageimg = pdf->getPixFromPage(pageNumber);
 
@@ -412,14 +413,12 @@ QString runPDF(PDFHandler* pdf,
             continue;
         }
 
-        info.status = QString("Preprocessing page %1/%2...").arg(pageNumber, info.pages.length());
+        info.status = QString("Preprocessing page %1/%2...").arg(info.curPage).arg(info.pages.length());
 
         Pix *pixs = preprocess(pageimg, settings->getTileSize(), settings->getTileSize(),
                                settings->getThreshold(), settings->getMinCount(), settings->getBgVal(),
                                settings->getSmoothingFactor(), settings->getSmoothingFactor(),
                                settings->getScoreFract());
-
-        pixDestroy(&pageimg);
 
         if(!pixs) {
             pixDestroy(&pixs);
@@ -437,16 +436,17 @@ QString runPDF(PDFHandler* pdf,
         api->SetSourceResolution(300);
 
         char *outText;
-        info.status = QString("Running OCR for page %1/%2...").arg(pageNumber, info.pages.length());
+        info.status = QString("Running OCR for page %1/%2...").arg(info.curPage).arg(info.pages.length());
         api->Recognize(monitor);
         outText = api->GetUTF8Text();
 
-        info.status = QString("Postprocessing page %1/%2...").arg(pageNumber, info.pages.length());
+        info.status = QString("Postprocessing page %1/%2...").arg(info.curPage).arg(info.pages.length());
         pixDestroy(&pixs);
 
         text += clean(outText, api, settings->getConfidence());
         text += "\r\n";
 
+        ++info.curPage;
     }
 
     api->Clear();
