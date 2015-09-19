@@ -7,6 +7,8 @@ Dialog {
     id: filePicker
     property url selectedFile: "";
     property string currentFolder: "";
+    property int lastSelected: -1;
+    canAccept: false
 
     Component.onCompleted: {
         folderModel.folder = tesseractAPI.homePath();
@@ -62,29 +64,20 @@ Dialog {
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
-                id: parentBall1
+                anchors.leftMargin: Theme.paddingLarge
+                id: folderup
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                source: "image://theme/graphic-toggle-on"
-            }
-
-            Image {
-                fillMode: Image.Pad
-                horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
-                id: parentBall2
-                anchors.left: parentBall1.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: Theme.paddingSmall * 5
-                source: "image://theme/graphic-toggle-on"
+                rotation: -90
+                source: "image://theme/icon-m-page-up"
+                visible: currentFolder != "/"
             }
 
             Text {
-                width: parent.width - parentBall1.width - parentBall2.width - Theme.paddingLarge * 2
+                width: parent.width - folderup.width - Theme.paddingLarge * 3
                 anchors.top: parent.top
-                anchors.left: parentBall2.right
+                anchors.left: folderup.right
                 anchors.right: parent.right
                 height: parent.height
                 wrapMode: Text.Wrap
@@ -97,8 +90,9 @@ Dialog {
             }
 
             onClicked: {
-                currentFolder = String(folderModel.parentFolder).replace("file://", "");
-                if(currentFolder !== "") {
+                var folder = String(folderModel.parentFolder).replace("file://", "");
+                if(folder !== "") {
+                    currentFolder = folder;
                     folderModel.folder = folderModel.parentFolder;
                 }
             }
@@ -181,9 +175,11 @@ Dialog {
 
                 onClicked: {
                     if(folderModel.isFolder(index)) {
+                        lastSelected = -1;
                         folderModel.folder = fileURL;
                         currentFolder = String(fileURL).replace("file://", "");
                     } else {
+                        canAccept = true;
                         selectedFile = fileURL;
                         filePicker.accept();
                     }
