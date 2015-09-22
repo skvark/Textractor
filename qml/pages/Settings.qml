@@ -109,7 +109,7 @@ Page {
                 anchors.topMargin: 20
                 stepSize: 1
                 minimumValue: 20
-                maximumValue: 2000
+                maximumValue: 1000
                 value: tesseractAPI.settings.getTileSize();
                 valueText: value + " x " + value + " px"
                 onValueChanged: tesseractAPI.settings.setTileSize(value);
