@@ -47,6 +47,7 @@ public:
     Q_INVOKABLE bool getRotated();
     Q_INVOKABLE QString getRotatedPath();
     Q_INVOKABLE QString getPrepdPath();
+    Q_INVOKABLE bool thumbsReady();
 
     static bool cancelCallback(void *cancel_this, int words) {
         Q_UNUSED(words);
@@ -95,6 +96,7 @@ private:
     QString status_;
     QString rotatedPath_;
     bool rotated_;
+    bool thumbsReady_;
     unsigned int previousPage_;
 
     ETEXT_DESC *monitor_;

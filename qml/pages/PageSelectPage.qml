@@ -16,6 +16,13 @@ Dialog {
        cancelText: "Cancel"
     }
 
+    Component.onCompleted: {
+        if(tesseractAPI.thumbsReady()) {
+            listView.model = tesseractAPI.getIdsList();
+            loading = false;
+        }
+    }
+
     canAccept: false
     backNavigation: !loading
 

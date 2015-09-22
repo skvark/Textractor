@@ -91,6 +91,7 @@ PDFThumbnailProvider *TesseractAPI::getThumbnailProvider() {
 
 void TesseractAPI::getThumbnails(QString path) {
 
+    thumbsReady_ = false;
     PDFwatcher_ = new QFutureWatcher<QStringList>();
     connect(PDFwatcher_, SIGNAL(finished()), this, SLOT(handleThumbnails()));
     QFuture<QStringList> future = QtConcurrent::run(PDFhandler_, &PDFHandler::getThumbnails, path.replace("file://", ""), std::ref(status_));
@@ -203,6 +204,11 @@ QString TesseractAPI::getPrepdPath()
     return info_.prepdPath;
 }
 
+bool TesseractAPI::thumbsReady()
+{
+    return thumbsReady_;
+}
+
 void TesseractAPI::handleAnalyzed()
 {
     // send results to the UI
@@ -233,6 +239,7 @@ void TesseractAPI::handleRotated()
 
 void TesseractAPI::handleThumbnails()
 {
+   thumbsReady_ = true;
    emit thumbnailsReady(PDFwatcher_->future().result());
    // disconnect and destroy the QFutureWatcher
    disconnect(PDFwatcher_, SIGNAL(finished()), this, SLOT(handleThumbnails()));
