@@ -5,7 +5,7 @@
     <title>Textractor by skvark</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -39,6 +39,13 @@
 <a id="supported-image-formats" class="anchor" href="#supported-image-formats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported image formats</h3>
 
 <p>Textractor supports all the image formats which Sailfish OS supports. Images must have 32 bits per pixel. If image does not have 32 bits per pixels, preprocessing step is skipped and results may be poor. However, already preprocessed (Textractor outputs 1 bpp aka binarized image after the preprocessing step and saves it to the gallery) images will work fine. Preprocessed image is always overwritten when new recognition is started.</p>
+
+<h3>
+<a id="cropping-the-image" class="anchor" href="#cropping-the-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cropping the image</h3>
+
+<p>After you have selected or taken an image, Textractor will show a cropping page. By dragging the four corners in desired position you can select a smaller area from the image. The area doesn't need to be square: the corner points can be in any quadrilateral arrangement due to the fact that perspective correction is applied afterwards to the selected area. This means that Textractor tries to correct the distortion (camera's optical axis is rarely perpendicular to the target when an image is taken) in the area according to the selected corner point locations.</p>
+
+<p>If you don't want to crop the image, just proceed to analyze.</p>
 
 <h3>
 <a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
@@ -102,6 +109,13 @@
 <li>There are reflections in the picture</li>
 </ul>
 
+<h4>
+<a id="about-the-pdf-analysis" class="anchor" href="#about-the-pdf-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>About the PDF analysis</h4>
+
+<p>Running OCR for PDF files is mainly intended for files which have been created for example by a scanner.
+This means that the text inside the files is actually in an image format and can't be copied without OCR.
+However, this feature will work too for PDF files which have been created by a text editor.</p>
+
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
@@ -123,4 +137,3 @@
   
   </body>
 </html>
-
