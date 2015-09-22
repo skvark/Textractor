@@ -41,16 +41,6 @@ Currently following steps will be done before the image is passed to the engine 
 
 After those steps the image is passed to the Tesseract.
 
-Postprocessing
---------------
-
-The results are filtered based on the word confindence value. Confidence value is a number between 0-100. 0 means that Tesseract wasn't really sure about the detected word and 100 means that Tesseract is sure that the word is what it is.
-
-Settings
---------
-
-I will make some kind of informative page which explains the parameters at some point.
-
 Test image and result
 ---------------------
 
