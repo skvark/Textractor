@@ -15,7 +15,7 @@ Name:       harbour-textractor
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Optical character recognition application.
-Version:    0.5
+Version:    0.6
 Release:    0
 Group:      Qt/Qt
 License:    MIT
@@ -74,6 +74,7 @@ desktop-file-install --delete-original       \
    %{buildroot}%{_datadir}/applications/*.desktop
 
 %files
+%defattr(-,root,root,-)
 # >> files
 %defattr(0644,root,root,0755)
 %attr(0755,-,-) %{_bindir}/%{name}
