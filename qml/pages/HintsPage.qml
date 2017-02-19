@@ -9,21 +9,25 @@ Page {
 
         id: info
         anchors.fill: parent
-        contentHeight: 1750
+        contentHeight: header.height
+                       + generalsection.height
+                       + takingpics.height
+                       + section2.height
+                       + section2text.height
+                       + section3.height
+                       + section3text.height
+                       + 120
 
-        Column {
-            id: headerContainer
-            width: page.width
-            PageHeader {
-                title: qsTr("Usage Hints")
-            }
+        PageHeader {
+            id: header
+            title: qsTr("Usage Hints")
         }
 
         SectionHeader {
             id: generalsection
             text: qsTr("Taking a Good Picture")
             height: 50;
-            anchors.top: headerContainer.bottom
+            anchors.top: header.bottom
         }
 
         Label {
@@ -105,10 +109,12 @@ Page {
             onLinkActivated: Qt.openUrlExternally(link)
             text: "Running OCR for PDF files is mainly intended for files which have been created for example by a scanner.
                    This means that the text inside the files is actually in an image format and can't be copied without OCR.
-                   However, this feature will work too for PDF files which have been created by a text editor.";
+                   However, PDF files which have been created by a text editor will work too but it's recommended to copy the
+                   text directly from them with some other application.";
         }
 
-        VerticalScrollDecorator { flickable: info }
     }
+
+    VerticalScrollDecorator { flickable: info }
 
 }

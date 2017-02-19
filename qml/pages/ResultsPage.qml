@@ -43,7 +43,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder
-            anchors.verticalCenterOffset: 255
+            anchors.verticalCenterOffset: (parent.height / 2) * 0.57
             anchors.centerIn: parent
             enabled: loading
             text: ""
@@ -51,7 +51,7 @@ Page {
 
         ViewPlaceholder {
             id: statusholder2
-            anchors.verticalCenterOffset: 350
+            anchors.verticalCenterOffset: (parent.height / 2) * 0.75
             anchors.centerIn: parent
             enabled: loading
             text: ""
