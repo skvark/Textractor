@@ -7,7 +7,7 @@ Name:       harbour-textractor
 
 # >> macros
 %define __provides_exclude_from ^%{_datadir}/.*$
-%define __requires_exclude ^libtesseract|libjpeg|libexif\\.so\\.12|libc\\.so\\.6\\(GLIBC_2\\.11\\)|libpoppler-qt5\\.so\\.1|libQt5Widgets\\.so\\.5|libfreetype\\.so\\.6|libpoppler\\.so\\.43|liblept.*$
+%define __requires_exclude ^libtesseract|libjpeg|libpng|libnss3|libsmime3|libssl3|libnssutil3|libnspr4|libplc4|libplds4|libexif\\.so\\.12|libc\\.so\\.6\\(GLIBC_2\\.11\\)|libpoppler-qt5\\.so\\.1|libQt5Widgets\\.so\\.5|libfreetype\\.so\\.6|libpoppler\\.so\\.63|liblept.*$
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
@@ -15,7 +15,7 @@ Name:       harbour-textractor
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Optical character recognition application.
-Version:    0.6
+Version:    0.7
 Release:    0
 Group:      Qt/Qt
 License:    MIT
@@ -60,13 +60,22 @@ rm -rf %{buildroot}
 # >> install post
 mkdir %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libtesseract.so.3 %{buildroot}%{_datadir}/%{name}/lib/
-cp -f /usr/lib/liblept.so.4 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/liblept.so.5 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libjpeg.so.62 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libpng15.so.15 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libexif.so.12 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libpoppler-qt5.so.1 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libQt5Widgets.so.5 %{buildroot}%{_datadir}/%{name}/lib/
 cp -f /usr/lib/libfreetype.so.6 %{buildroot}%{_datadir}/%{name}/lib/
-cp -f /usr/lib/libpoppler.so.43 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libpoppler.so.63 %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libnss3.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libnssutil3.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libssl3.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libsmime3.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libnspr4.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libplc4.so %{buildroot}%{_datadir}/%{name}/lib/
+cp -f /usr/lib/libplds4.so %{buildroot}%{_datadir}/%{name}/lib/
+
 # << install post
 
 desktop-file-install --delete-original       \

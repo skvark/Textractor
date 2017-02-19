@@ -60,7 +60,6 @@ OTHER_FILES += qml/harbour-textractor.qml \
     qml/pages/MainPage.qml \
     qml/pages/DownloadPage.qml \
     qml/pages/About.qml \
-    rpm/harbour-textractor.yaml \
     qml/pages/CroppingPage.qml \
     qml/pages/CornerPoint.qml \
     qml/pages/FilePickerDialog.qml \
