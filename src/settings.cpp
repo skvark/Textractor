@@ -33,9 +33,7 @@ void SettingsManager::resetToDefaults()
 
 void SettingsManager::setLanguage(QString language)
 {
-    if(!language.isEmpty()) {
-        settings_->setValue("language", toQVariant(languages.key(language)));
-    }
+    settings_->setValue("language", toQVariant(languages.key(language)));
 }
 
 QString SettingsManager::getLanguageCode()
@@ -155,7 +153,7 @@ float SettingsManager::getConfidence()
 bool SettingsManager::isLangDataAvailable(QString lang)
 {
     QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    QDir tessdata = QDir(datadir + "/tesseract-ocr/tessdata/");
+    QDir tessdata = QDir(datadir + "/tesseract-ocr/3.05/tessdata");
     QStringList data = tessdata.entryList();
     return data.contains(languages.key(lang) + QString(".traineddata"));
 }

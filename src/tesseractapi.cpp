@@ -15,11 +15,18 @@ TesseractAPI::TesseractAPI(QObject *parent) :
     PDFhandler_ = new PDFHandler();
 
     QObject::connect(downloadManager_, SIGNAL(downloaded(QString)),
-                     this, SIGNAL(languageExtracting(QString)));
-    QObject::connect(downloadManager_, SIGNAL(extracted(QString)),
                      this, SIGNAL(languageReady(QString)));
 
     api_ = new tesseract::TessBaseAPI();
+
+    QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString datapath = QString(datadir + "/tesseract-ocr/3.05/tessdata");
+
+    QDir dir(datapath);
+    if (!dir.exists()) {
+        settingsManager_->setLanguage("");
+        dir.mkpath(".");
+    }
 
     if (settingsManager_->getLanguageCode().length() == 0) {
         settingsManager_->resetToDefaults();
@@ -28,7 +35,6 @@ TesseractAPI::TesseractAPI(QObject *parent) :
 
     info_ = Info();
     cancel_ = false;
-
 }
 
 TesseractAPI::~TesseractAPI()

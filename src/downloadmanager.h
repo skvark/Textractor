@@ -18,11 +18,9 @@ public:
 
 public slots:
     void finished(QNetworkReply *reply);
-    void extracted(int exitCode, QProcess::ExitStatus exitStatus);
 
 signals:
     void downloaded(QString language);
-    void extracted(QString language);
     void networkError(QNetworkReply::NetworkError error);
 
 private:

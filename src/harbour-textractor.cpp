@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
     // Set the tessdata directory prefix env variable
     QString datadir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    qputenv("TESSDATA_PREFIX", QString(datadir + "/tesseract-ocr/tessdata/").toLocal8Bit());
+    qputenv("TESSDATA_PREFIX", QString(datadir + "/tesseract-ocr/3.05/").toLocal8Bit());
 
     TesseractAPI interface;
     view->rootContext()->setContextProperty("tesseractAPI", &interface);

@@ -12,7 +12,7 @@ Page {
 
     Timer {
         id: timer
-        interval: 50;
+        interval: 100;
         running: false;
         repeat: false;
         onTriggered: pageStack.pop();
@@ -61,14 +61,9 @@ Page {
 
         onLanguageReady: {
             busyind.running = false;
-            backNavigation: true;
+            page.backNavigation = true;
             tesseractAPI.settings.setLanguage(language);
             timer.start();
-        }
-
-        onLanguageExtracting: {
-            busyind.running = true;
-            bar.label = "Installing " + language + " ...";
         }
 
         onProgressStatus: {
