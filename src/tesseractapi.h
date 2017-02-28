@@ -97,6 +97,7 @@ private:
     QString rotatedPath_;
     bool rotated_;
     bool thumbsReady_;
+    bool run_at_least_once_;
     unsigned int previousPage_;
 
     ETEXT_DESC *monitor_;

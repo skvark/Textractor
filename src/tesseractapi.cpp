@@ -35,23 +35,27 @@ TesseractAPI::TesseractAPI(QObject *parent) :
 
     info_ = Info();
     cancel_ = false;
+    run_at_least_once_ = false;
 }
 
 TesseractAPI::~TesseractAPI()
 {
-    delete monitor_;
-    monitor_ = 0;
     delete settingsManager_;
     settingsManager_ = 0;
     delete downloadManager_;
     downloadManager_ = 0;
     delete timer_;
     timer_ = 0;
+
     delete PDFhandler_;
     PDFhandler_ = 0;
-    api_->End();
-    delete api_;
-    api_ = 0;
+
+    delete monitor_;
+    monitor_ = 0;
+    if(run_at_least_once_) {
+        api_->End();
+        api_ = 0;
+    }
 }
 
 void TesseractAPI::prepareForCropping(QString imagepath, int rotation, bool gallery) {
@@ -89,6 +93,7 @@ void TesseractAPI::analyze(QString imagepath, QVariant cropPoints)
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
     timer_->start(250);
+    run_at_least_once_ = true;
 }
 
 PDFThumbnailProvider *TesseractAPI::getThumbnailProvider() {
@@ -133,6 +138,7 @@ void TesseractAPI::analyzePDF(QList<int> pages)
     // Periodically firing timer to get progress reports to the UI.
     connect(timer_, SIGNAL(timeout()), this, SLOT(update()));
     timer_->start(250);
+    run_at_least_once_ = true;
 }
 
 void TesseractAPI::cancel()

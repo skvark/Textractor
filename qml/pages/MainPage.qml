@@ -89,17 +89,22 @@ Page {
             enabled: idle
 
             Image {
-                anchors.fill: parent
+                anchors {
+                    top: label1.bottom
+                    left: parent.left
+                    right: parent.right
+                }
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
                 source: "image://theme/icon-m-camera"
                 scale: 1.5
                 z: 30
             }
 
             Label {
+                id: label1
                 anchors.topMargin: 10;
+                anchors.bottomMargin: 10;
                 anchors.top: parent.top
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
@@ -123,16 +128,21 @@ Page {
             enabled: idle
 
             Image {
-                anchors.fill: parent
+                anchors {
+                    top: label2.bottom
+                    left: parent.left
+                    right: parent.right
+                }
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
                 source: "image://theme/icon-l-image"
                 z: 30
             }
 
             Label {
+                id: label2
                 anchors.topMargin: 10;
+                anchors.bottomMargin: 10;
                 anchors.top: parent.top
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
@@ -174,16 +184,21 @@ Page {
             enabled: idle
 
             Image {
-                anchors.fill: parent
+                anchors {
+                    top: label3.bottom
+                    left: parent.left
+                    right: parent.right
+                }
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
                 source: "image://theme/icon-l-document"
                 z: 30
             }
 
             Label {
+                id: label3
                 anchors.topMargin: 10;
+                anchors.bottomMargin: 10;
                 anchors.top: parent.top
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
